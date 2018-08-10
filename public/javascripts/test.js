@@ -15,11 +15,7 @@ var incomeOption = 'Med'; //Hi,Lo
 var carOption = 'Ins';//No, Suff,NCAW
 var purposeOption = "All";//Eat,PB,PUDO,QS,Rec,Shop,Soc
 var gradeOption = "Elem";//Elem,JHS,Pre,SHS_Lic,SHS_NoLic
-// var connections =[];
 var selectMatrixName='../data/Work/LogsumMed_Ins.csv';
-// var index = null;
-
-
 require(["esri/graphic",
   "esri/geometry/Polyline",
   "esri/geometry/Extent",
@@ -42,8 +38,6 @@ require(["esri/graphic",
     ClassBreaksRenderer,
     Color, domStyle
 ) { 
-  
-
     $('#radios1').radiosToSlider({
         animation: true,
     });     
@@ -66,11 +60,7 @@ require(["esri/graphic",
     $('#radioContainer4').hide();
     $('#radioContainer5').hide();
     q.defer(d3.csv,selectMatrixName).await(brushMap);
-    
-    
-
     function brushMap(error,selectMatrix,title){
-  
         $('#radios1').click(function() {
             var nowJobOption = $('input[name=options1]:checked').val();
             if(nowJobOption!= jobOption){
@@ -110,88 +100,60 @@ require(["esri/graphic",
                 $('#radioContainer5').show();
                 selectMatrixName =findMatrix();
               }
-              
               d3.csv(selectMatrixName,function(d){              
-                dataMatrix = buildMatrixLookup(d)
+                dataMatrix = buildMatrixLookup(d);
                 $("#wait").css("display", "none");
                 featureLayer.redraw();
-  
-              })
+              });
             }
-
         });
         
-        
         $('#radios2').click(function() {
-    
           var nowCarOption =  $('input[name=options2]:checked').val();
           if(nowCarOption!= carOption){
             carOption = nowCarOption;
             redrawLayer();
-          }
-
-        
+          }    
         });
         $('#radios2_1').click(function() {
-    
           var nowCarOption =  $('input[name=options2_1]:checked').val();
           if(nowCarOption!= carOption){
             carOption = nowCarOption;
             redrawLayer();
           }
-
-        
         });
         
         $('#radios3').click(function() {
-
           var nowIncomeOption =  $('input[name=options3]:checked').val();
           if(nowIncomeOption!=incomeOption){
             incomeOption = nowIncomeOption;
             redrawLayer();
-          
           }
-
         });
-        
-        
         $('#radios4').click(function() {
-          
           var nowGradeOption =  $('input[name=options4]:checked').val();
           if(nowGradeOption !=gradeOption){
             gradeOption = nowGradeOption;
             redrawLayer();
           }
-  
-        
         });
         
         $('#radios5').click(function() {
-
           var nowPurposeOption =  $('input[name=options5]:checked').val();
           if(purposeOption != nowPurposeOption){
             purposeOption = nowPurposeOption;
             redrawLayer();
           }
-
-        
         });
-        
-        
         function redrawLayer(){
           selectMatrixName =findMatrix();
           d3.csv(selectMatrixName,function(d){
-            
             dataMatrix = buildMatrixLookup(d);
             $("#wait").css("display", "none");
             featureLayer.redraw();
-
           });
         }
-      
         dataMatrix = buildMatrixLookup(selectMatrix);
-        
-    
         var popup = new Popup({  
           fillSymbol:
             new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
@@ -212,9 +174,7 @@ require(["esri/graphic",
          }, "viewDiv");
          
          toggle.startup();
-         
-    
-      
+               
         var featureLayer = new FeatureLayer("https://services8.arcgis.com/FCQ1UtL7vfUUEwH7/arcgis/rest/services/newestTAZ/FeatureServer/0?token=8gOmRemAl8guD3WA_rfLwe50SgsEvaZzIcXIraH9xC3NQPCLraLwcHIkz3osWU-SHUdSKO1N6rCnWDF_CzWLFlFFUCeugETS44f409SsCtX9eC-HoX0dkXZj2vQD1SsboTGNgAzLDtG-BfIv0FnlWBNqq84hC5a6e7lj2Tt1oV8V0WxGiCE7rtaXgxZr18TZur-l_T6gWW2jDh1mt5q0mqty8vc133DvOtg5JhtGm8OTdn9rYtscRKu66B153RYB",{
             mode: FeatureLayer.MODE_SNAPSHOT,
             outFields: ["*"],
@@ -224,15 +184,12 @@ require(["esri/graphic",
             mode: FeatureLayer.MODE_SNAPSHOT,
             outFields: ["*"],
         });
-
         // PSELayer = addPSELocation();
         var pseLayer = new FeatureLayer("https://services8.arcgis.com/FCQ1UtL7vfUUEwH7/arcgis/rest/services/pse/FeatureServer/0?token=Z-SDaJDXBiNKlWI9q05NjRiKcjoysekbM2vYNhYD6gETiJzS7IggUYgO3fQ8yua2FMceup7wEsz440QpyduUiuu-OoAUMsjIOaqgrhjAU3oqoorIKY6HsM1-jpLgNPof-YrNhlTq04cJs9Soi0RqIjr3gCtuCaR74_0mLSjVN42R2okTrgOl7pr7thQEdveBKh6zNGgmrYMJiGtGA6dLwUgpJC59-9RL63-SoxDZdLDiwygEyy3wMP_lKcCbOPPU",{
             mode: FeatureLayer.MODE_SNAPSHOT,
             outFields: ["*"],
-
         });
 
-    
         var highlightSymbol = new SimpleFillSymbol(
           SimpleFillSymbol.STYLE_SOLID,
           new SimpleLineSymbol(
@@ -271,12 +228,10 @@ require(["esri/graphic",
         //   map.infoWindow.show(evt.screenPoint,map.getInfoWindowAnchor(evt.screenPoint));
         // }
         // 
-        
         var accessibilityResult = [];
         largestIndividualArray = findRangeForIndividualCalcultion('what');
         sort = Object.values(largestIndividualArray).sort((prev,next)=>prev-next); //from smallest to largest
         sort = sort.map(x =>x.toFixed(2));
-
         var chunkZones = 89;        
         var symbol = new SimpleFillSymbol(); 
         var renderer = new ClassBreaksRenderer(symbol, function(feature){
@@ -350,10 +305,7 @@ require(["esri/graphic",
               // dojo.forEach(connections,dojo.disconnect);
           }
         })
-
     }
-
-
 });
 
 function buildMatrixLookup(arr) {    
@@ -365,50 +317,10 @@ function buildMatrixLookup(arr) {
     delete arr[i][verbal];
     lookup[parseInt(k)] = Object.keys(arr[i]).reduce((obj, key) => (obj[parseInt(key)] = Number(arr[i][key]),obj), {});
   }
-
   return lookup;
 }
 
-
 function findRangeForIndividualCalcultion(jobType){
-  // var dict = {};
-  // var TAZ = 0;
-  // for(var k in popEmp){
-  //         dict[popEmp[k]['New Zone']] = Number(popEmp[k][jobType]);
-  // }
-  // 
-  //   // Create items array
-  // var items = Object.keys(dict).map(function(key) {
-  //   return [key, dict[key]];
-  // });
-  // 
-  // // Sort the array based on the second element
-  // items.sort(function(first, second) {
-  //   return second[1] - first[1];
-  // });
-  // while(items[items.length-1][1] === 0){ // While the last element is a 0,
-  //     items.pop();                  // Remove that last element
-  // }
-  // 
-  // TAZ = items[parseInt(items.length/22)][0];
-  // 
-  // var largestIndividualArray = individualCaculation(travelTypeDict.A_AM,jobType,TAZ);
-  
-  // var maxValue=0;
-  // var maxTaz=0;
-  // 
-  // for(var k in dataMatrix){
-  //   for(var n in dataMatrix[k]){
-  //     console.log(dataMatrix[k][n])
-  //     break;
-  //     if(dataMatrix[k][n]>maxValue){
-  //       maxValue = n;
-  //       maxTaz = k;
-  //     }
-  //   }
-  // 
-  // }
-  // console.log(k)
   return dataMatrix['101'];
 }
 function findMatrix(){
@@ -429,11 +341,9 @@ function findMatrix(){
     }
     else{
       baseDirect = "../data/Otherpurpose/Logsum"+purposeOption+'_'+carOption+'.csv';
-
     }
-
   }
-  console.log(baseDirect)
+  console.log(baseDirect);
   return baseDirect;
   
 }
