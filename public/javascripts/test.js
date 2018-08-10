@@ -17,6 +17,9 @@ var purposeOption = "All";//Eat,PB,PUDO,QS,Rec,Shop,Soc
 var gradeOption = "Elem";//Elem,JHS,Pre,SHS_Lic,SHS_NoLic
 var connections =[];
 var selectMatrixName='../data/Work/LogsumMed_Ins.csv';
+// var index = null;
+
+
 require(["esri/graphic",
   "esri/geometry/Polyline",
   "esri/geometry/Extent",
@@ -27,7 +30,6 @@ require(["esri/graphic",
   "dojo/dom-class",
   "esri/dijit/BasemapToggle",
   "esri/dijit/Legend",
-    "../externalJS/geojsonlayer.js",
     "esri/map", "esri/layers/FeatureLayer",
     "esri/InfoTemplate", "esri/symbols/SimpleFillSymbol", "esri/symbols/SimpleLineSymbol",
     "esri/renderers/ClassBreaksRenderer",
@@ -35,13 +37,13 @@ require(["esri/graphic",
 ], function(Graphic,Polyline,
   Extent,domConstruct,
   Query,Popup, PopupTemplate,domClass,BasemapToggle,Legend,
-    GeoJsonLayer,Map, FeatureLayer,
+    Map, FeatureLayer,
     InfoTemplate, SimpleFillSymbol,SimpleLineSymbol,
     ClassBreaksRenderer,
     Color, domStyle
 ) { 
   
-  
+
     $('#radios1').radiosToSlider({
         animation: true,
     });     
@@ -64,7 +66,11 @@ require(["esri/graphic",
     $('#radioContainer4').hide();
     $('#radioContainer5').hide();
     q.defer(d3.csv,selectMatrixName).await(brushMap);
-    function brushMap(error,selectMatrix){
+    
+    
+
+    function brushMap(error,selectMatrix,title){
+  
         $('#radios1').click(function() {
             var nowJobOption = $('input[name=options1]:checked').val();
             if(nowJobOption!= jobOption){
@@ -235,7 +241,6 @@ require(["esri/graphic",
           ),
           new Color([125,125,125,0])
         );
-
         featureLayer.on('click',function(evt){
             map.graphics.clear();
             var graphic = evt.graphic;
@@ -243,7 +248,7 @@ require(["esri/graphic",
             var highlightGraphic = new Graphic(evt.graphic.geometry,highlightSymbol);
             map.graphics.add(highlightGraphic);
             featureLayer.redraw();
-        })
+        });
       
         function MouseOverhighlightGraphic(evt){
           var graphic = evt.graphic;
@@ -353,13 +358,11 @@ require(["esri/graphic",
 
 function buildMatrixLookup(arr) {    
   var lookup = {};
-  var index = arr.columns;
+  var index = arr.columns
   var verbal = index[0];
   for(var i =0; i<arr.length;i++){
     var k = arr[i][verbal];
-  
     delete arr[i][verbal];
-  
     lookup[parseInt(k)] = Object.keys(arr[i]).reduce((obj, key) => (obj[parseInt(key)] = Number(arr[i][key]),obj), {});
   }
 
