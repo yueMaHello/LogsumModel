@@ -14,8 +14,8 @@ function walkfolders(dir) {
     });
     return filelist;
 }
-var csvFileList = walkfolders('./public/data');
-var appName = csvFileList[0].split('.csv')[0];
+
+var appName = 'Logsum Model';
 
 router.get('/', function(req, res, next) {
     res.render('index', { title: appName});

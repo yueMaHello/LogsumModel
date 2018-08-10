@@ -1,6 +1,6 @@
 var map;
 var geoJsonLayer1;
-var SOV_AUTO_Time_AM_Cr_mf1 = '../data/'+title+'.csv';
+// var SOV_AUTO_Time_AM_Cr_mf1 = '../data/'+title+'.csv';
 var dataMatrix;
 var popEmp;
 var travelTypeDict = {};
@@ -10,35 +10,182 @@ var largestIndividualArray = [];
 var sort = [];
 var selectZone = '101'; //default
 var hoverZone;
-console.log(title+'.csv')
-q.defer(d3.csv,SOV_AUTO_Time_AM_Cr_mf1).await(brushMap);
-function brushMap(error,sov_auto_time){
-    dataMatrix = buildMatrixLookup(sov_auto_time);
-    require([
-      "esri/geometry/Polyline",
-      "esri/geometry/Extent",
-      "dojo/dom-construct",
-      "esri/tasks/query",
-      "esri/dijit/Popup",
-      "esri/dijit/PopupTemplate",
-      "dojo/dom-class",
-      "esri/dijit/BasemapToggle",
-      "esri/dijit/Legend",
-        "../externalJS/geojsonlayer.js",
-        "esri/map", "esri/layers/FeatureLayer",
-        "esri/InfoTemplate", "esri/symbols/SimpleFillSymbol", "esri/symbols/SimpleLineSymbol",
-        "esri/renderers/ClassBreaksRenderer",
-        "esri/Color", "dojo/dom-style", "dojo/domReady!"
-    ], function(Polyline,
-      Extent,domConstruct,
-      Query,Popup, PopupTemplate,domClass,BasemapToggle,Legend,
-        GeoJsonLayer,Map, FeatureLayer,
-        InfoTemplate, SimpleFillSymbol,SimpleLineSymbol,
-        ClassBreaksRenderer,
-        Color, domStyle
-    ) {
-        var connections = [];
+var jobOption = 'Work'; //PSE,Other,Otherpurpose,GS
+var incomeOption = 'Med'; //Hi,Lo
+var carOption = 'Ins';//No, Suff,NCAW
+var purposeOption = "All";//Eat,PB,PUDO,QS,Rec,Shop,Soc
+var gradeOption = "Elem";//Elem,JHS,Pre,SHS_Lic,SHS_NoLic
+var connections =[];
+var selectMatrixName='../data/Work/LogsumMed_Ins.csv';
+require(["esri/graphic",
+  "esri/geometry/Polyline",
+  "esri/geometry/Extent",
+  "dojo/dom-construct",
+  "esri/tasks/query",
+  "esri/dijit/Popup",
+  "esri/dijit/PopupTemplate",
+  "dojo/dom-class",
+  "esri/dijit/BasemapToggle",
+  "esri/dijit/Legend",
+    "../externalJS/geojsonlayer.js",
+    "esri/map", "esri/layers/FeatureLayer",
+    "esri/InfoTemplate", "esri/symbols/SimpleFillSymbol", "esri/symbols/SimpleLineSymbol",
+    "esri/renderers/ClassBreaksRenderer",
+    "esri/Color", "dojo/dom-style", "dojo/domReady!"
+], function(Graphic,Polyline,
+  Extent,domConstruct,
+  Query,Popup, PopupTemplate,domClass,BasemapToggle,Legend,
+    GeoJsonLayer,Map, FeatureLayer,
+    InfoTemplate, SimpleFillSymbol,SimpleLineSymbol,
+    ClassBreaksRenderer,
+    Color, domStyle
+) { 
+  
+  
+    $('#radios1').radiosToSlider({
+        animation: true,
+    });     
+    $('#radios2').radiosToSlider({
+        animation: true,
+    });    
+    $('#radios2_1').radiosToSlider({
+        animation: true,
+    }); 
+    $('#radios3').radiosToSlider({
+        animation: true,
+    });      
+    $('#radios4').radiosToSlider({
+        animation: true,
+    });      
+    $('#radios5').radiosToSlider({
+        animation: true,
+    });      
+    $('#radioContainer2_1').hide();
+    $('#radioContainer4').hide();
+    $('#radioContainer5').hide();
+    q.defer(d3.csv,selectMatrixName).await(brushMap);
+    function brushMap(error,selectMatrix){
+        $('#radios1').click(function() {
+            var nowJobOption = $('input[name=options1]:checked').val();
+            if(nowJobOption!= jobOption){
+              jobOption=nowJobOption;
+              if(jobOption === 'PSE'){
+                $('#radioContainer2_1').show();
+                $('#radioContainer2').hide();
+                $('#radioContainer3').hide();
+                $('#radioContainer4').hide();
+                $('#radioContainer5').hide();
+                selectMatrixName =findMatrix();
+  
+              }
+              else if(jobOption === 'GS'){
+                $('#radioContainer2_1').show();
+                $('#radioContainer2').hide();
+                $('#radioContainer3').hide();
+                $('#radioContainer4').show();
+                $('#radioContainer5').hide();
+                selectMatrixName =findMatrix();
+  
+              }
+              else if(jobOption === 'Work'){
+                $('#radioContainer2_1').hide();
+                $('#radioContainer2').show();
+                $('#radioContainer3').show();
+                $('#radioContainer4').hide();
+                $('#radioContainer5').hide();
+                selectMatrixName =findMatrix();
+  
+              }
+              else if(jobOption === 'Other'){
+                $('#radioContainer2_1').show();
+                $('#radioContainer2').hide();
+                $('#radioContainer3').hide();
+                $('#radioContainer4').hide();
+                $('#radioContainer5').show();
+                selectMatrixName =findMatrix();
+              }
+              
+              d3.csv(selectMatrixName,function(d){              
+                dataMatrix = buildMatrixLookup(d)
+                $("#wait").css("display", "none");
+                featureLayer.redraw();
+  
+              })
+            }
+
+        });
         
+        
+        $('#radios2').click(function() {
+    
+          var nowCarOption =  $('input[name=options2]:checked').val();
+          if(nowCarOption!= carOption){
+            carOption = nowCarOption;
+            redrawLayer();
+          }
+
+        
+        });
+        $('#radios2_1').click(function() {
+    
+          var nowCarOption =  $('input[name=options2_1]:checked').val();
+          if(nowCarOption!= carOption){
+            carOption = nowCarOption;
+            redrawLayer();
+          }
+
+        
+        });
+        
+        $('#radios3').click(function() {
+
+          var nowIncomeOption =  $('input[name=options3]:checked').val();
+          if(nowIncomeOption!=incomeOption){
+            incomeOption = nowIncomeOption;
+            redrawLayer();
+          
+          }
+
+        });
+        
+        
+        $('#radios4').click(function() {
+          
+          var nowGradeOption =  $('input[name=options4]:checked').val();
+          if(nowGradeOption !=gradeOption){
+            gradeOption = nowGradeOption;
+            redrawLayer();
+          }
+  
+        
+        });
+        
+        $('#radios5').click(function() {
+
+          var nowPurposeOption =  $('input[name=options5]:checked').val();
+          if(purposeOption != nowPurposeOption){
+            purposeOption = nowPurposeOption;
+            redrawLayer();
+          }
+
+        
+        });
+        
+        
+        function redrawLayer(){
+          selectMatrixName =findMatrix();
+          d3.csv(selectMatrixName,function(d){
+            
+            dataMatrix = buildMatrixLookup(d)
+            $("#wait").css("display", "none");
+            featureLayer.redraw();
+
+          });
+        }
+      
+        dataMatrix = buildMatrixLookup(selectMatrix);
+        
+    
         var popup = new Popup({  
           fillSymbol:
             new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
@@ -50,10 +197,8 @@ function brushMap(error,sov_auto_time){
             center: [-113.4909, 53.5444],
             zoom: 9,
             minZoom:6,
-            infoWindow: popup,
             slider: false
         });
-        map.setInfoWindowOnClick(true);
         
         var toggle = new BasemapToggle({
            map: map,
@@ -62,48 +207,71 @@ function brushMap(error,sov_auto_time){
          
          toggle.startup();
          
-        var template = new InfoTemplate();
-        template.setContent(getTextContent);
+    
       
-        var featureLayer = new FeatureLayer("https://services8.arcgis.com/FCQ1UtL7vfUUEwH7/arcgis/rest/services/newestTAZ/FeatureServer/0?token=zwpope-UYmNeuAwyc7QdyY3CtnSR3zD05XyI45tDO27Xza7jjV6mY12x-jU6leaGFEN1DTvH092WhWyC5LmwHxpaVePomdQhkPd86OblRRtzO-LAzKP4mtjKJNEpS4XMpCYydXMlXN24O7H1MxUT99Ay_ztPJDRRU5ZO_uKZf-3IJDEEPVPSPTTYloiTYMGiMrup6UeuP_h4fhCFYtnHD2rzjAj2vRvBDSc5j0gIPIoi9iqMsBlkYatgXsV-gLj0",{
+        var featureLayer = new FeatureLayer("https://services8.arcgis.com/FCQ1UtL7vfUUEwH7/arcgis/rest/services/newestTAZ/FeatureServer/0?token=8gOmRemAl8guD3WA_rfLwe50SgsEvaZzIcXIraH9xC3NQPCLraLwcHIkz3osWU-SHUdSKO1N6rCnWDF_CzWLFlFFUCeugETS44f409SsCtX9eC-HoX0dkXZj2vQD1SsboTGNgAzLDtG-BfIv0FnlWBNqq84hC5a6e7lj2Tt1oV8V0WxGiCE7rtaXgxZr18TZur-l_T6gWW2jDh1mt5q0mqty8vc133DvOtg5JhtGm8OTdn9rYtscRKu66B153RYB",{
             mode: FeatureLayer.MODE_SNAPSHOT,
             outFields: ["*"],
-            infoTemplate: template
+    
         });
+        var lrtFeatureLayer = new FeatureLayer("https://services8.arcgis.com/FCQ1UtL7vfUUEwH7/arcgis/rest/services/LRT/FeatureServer/0?token=8ulK33e1cubPoKiLq5MxH9EpaN_wuyYRrMTiwsYkGKnPgYFbII8tkvV5i9Dk6tz2jVqY-_Zx-0-GXY3DeSVbtpo0NlLxEjFuPwpccMNBTGZwZsVYNrqBui-6DhEyve8rnD3qGPg_2pun9hFotDWSmlWAQn41B_Sop7pr9KLSS64H_CiMRPW0GZ9Bn6gPWkR8d0CZQ6fUoctmBUJp4gvRdf6vroPETCE9zJ2OFUdPto1Xm2pxvDc7Y5mDPT_ZOXbi",{
+            mode: FeatureLayer.MODE_SNAPSHOT,
+            outFields: ["*"],
+        });
+
+        // PSELayer = addPSELocation();
+        var pseLayer = new FeatureLayer("https://services8.arcgis.com/FCQ1UtL7vfUUEwH7/arcgis/rest/services/pse/FeatureServer/0?token=Z-SDaJDXBiNKlWI9q05NjRiKcjoysekbM2vYNhYD6gETiJzS7IggUYgO3fQ8yua2FMceup7wEsz440QpyduUiuu-OoAUMsjIOaqgrhjAU3oqoorIKY6HsM1-jpLgNPof-YrNhlTq04cJs9Soi0RqIjr3gCtuCaR74_0mLSjVN42R2okTrgOl7pr7thQEdveBKh6zNGgmrYMJiGtGA6dLwUgpJC59-9RL63-SoxDZdLDiwygEyy3wMP_lKcCbOPPU",{
+            mode: FeatureLayer.MODE_SNAPSHOT,
+            outFields: ["*"],
+
+        });
+
+    
+        var highlightSymbol = new SimpleFillSymbol(
+          SimpleFillSymbol.STYLE_SOLID,
+          new SimpleLineSymbol(
+            SimpleLineSymbol.STYLE_SOLID,
+            new Color([255,0,0]), 3
+          ),
+          new Color([125,125,125,0])
+        );
+
         featureLayer.on('click',function(evt){
+            map.graphics.clear();
             var graphic = evt.graphic;
             selectZone = graphic.attributes.TAZ_New;
-            var query = new Query();
-            query.geometry = pointToExtent(map, event.mapPoint, 10);
-            var deferred = featureLayer.selectFeatures(query,
-              FeatureLayer.SELECTION_NEW);
-            map.infoWindow.setFeatures([deferred]);
-            map.infoWindow.show(event.mapPoint);
+            var highlightGraphic = new Graphic(evt.graphic.geometry,highlightSymbol);
+            map.graphics.add(highlightGraphic);
             featureLayer.redraw();
         })
-        featureLayer.on('mouse-over',function(evt){
-            var graphic = evt.graphic;
-            hoverZone = graphic.attributes.TAZ_New;
-            var access;
-            if(check === false){
-              access = dataMatrix[selectZone][hoverZone];
-            }
-            else{
-              access = dataMatrix[hoverZone][selectZone];
-            }
-            
-            map.infoWindow.setTitle("<b>Zone Number: </b>"+hoverZone);
-            if(typeof(access)!=='undefined'){
-              map.infoWindow.setContent("<b><font size=\"3\"> Value:</font> </b>"+ "<font size=\"4\">"+access.toFixed(2)+"</font>");
-            }
-            else{
-              map.infoWindow.setContent("<b><font size=\"3\"> Value:</font> </b>"+ "<font size=\"4\">"+'undefined'+"</font>");
-            }
-            map.infoWindow.show(evt.screenPoint,map.getInfoWindowAnchor(evt.screenPoint));
-        });
+      
+        function MouseOverhighlightGraphic(evt){
+          var graphic = evt.graphic;
+          hoverZone = graphic.attributes.TAZ_New;
+          var access;
+          if(check === false){
+            access = dataMatrix[selectZone][hoverZone];
+          }
+          else{
+            access = dataMatrix[hoverZone][selectZone];
+          }
+          
+          map.infoWindow.setTitle("<b>Zone Number: </b>"+hoverZone);
+          if(typeof(access)!=='undefined'){
+            map.infoWindow.setContent("<b><font size=\"3\"> Value:</font> </b>"+ "<font size=\"4\">"+access.toFixed(2)+"</font>");
+          }
+          else{
+            map.infoWindow.setContent("<b><font size=\"3\"> Value:</font> </b>"+ "<font size=\"4\">"+'undefined'+"</font>");
+          }
+          map.infoWindow.show(evt.screenPoint,map.getInfoWindowAnchor(evt.screenPoint));
+        }
+        
+        
         var accessibilityResult = [];
         largestIndividualArray = findRangeForIndividualCalcultion('what');
         sort = Object.values(largestIndividualArray).sort((prev,next)=>prev-next); //from smallest to largest
+        sort = sort.map(x =>x.toFixed(2));
+
         var chunkZones = 89;        
         var symbol = new SimpleFillSymbol(); 
         var renderer = new ClassBreaksRenderer(symbol, function(feature){
@@ -114,14 +282,14 @@ function brushMap(error,sov_auto_time){
             return dataMatrix[feature.attributes.TAZ_New][selectZone];
           }
        });
-       // renderer.addBreak(-Infinity,0, new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([153, 153, 153,0.90])));
-       renderer.addBreak(0, sort[chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([255, 255, 255,0.90])));
+       //legend. If you want to change legend scale or legend color, this part of code needs to be modified
+       renderer.addBreak(-Infinity, sort[chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([255, 255, 255,0.90])));
        renderer.addBreak(sort[chunkZones], sort[2*chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([	249, 238, 237,0.90])));
        renderer.addBreak(sort[2*chunkZones], sort[3*chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([243, 224, 219,0.90])));
        renderer.addBreak(sort[3*chunkZones], sort[4*chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([237, 214, 202,0.90])));
-       renderer.addBreak( sort[4*chunkZones], sort[5*chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([225, 200, 170,0.90])));
-       renderer.addBreak( sort[5*chunkZones],  sort[6*chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([213, 196, 141,0.90])));
-       renderer.addBreak( sort[6*chunkZones],  sort[7*chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([207, 197, 127,0.90])));
+       renderer.addBreak(sort[4*chunkZones], sort[5*chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([225, 200, 170,0.90])));
+       renderer.addBreak(sort[5*chunkZones],  sort[6*chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([213, 196, 141,0.90])));
+       renderer.addBreak(sort[6*chunkZones],  sort[7*chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([207, 197, 127,0.90])));
        renderer.addBreak(sort[7*chunkZones], sort[8*chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([201, 199, 113,0.90])));
        renderer.addBreak(sort[8*chunkZones], sort[9*chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([185, 195, 101,0.90])));
        renderer.addBreak(sort[9*chunkZones], sort[10*chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([168, 189, 88,0.90])));
@@ -135,66 +303,67 @@ function brushMap(error,sov_auto_time){
        renderer.addBreak(sort[17*chunkZones], sort[18*chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([11, 106, 18,0.90])));
        renderer.addBreak(sort[18*chunkZones], Infinity, new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([5, 80, 15,0.90])));
        featureLayer.setRenderer(renderer);
-
+       //legend
     
         $('#legendDiv').append('<div class="legendClass" id = "legendid" </div>');  
         var legend = new Legend({
           map: map,
-          layerInfos: [{ layer: featureLayer, title: 'Legend' }]
+          layerInfos: [{layer:pseLayer,title:'Institutions'},{layer:lrtFeatureLayer,title:'LRT'},{ layer: featureLayer, title: 'Legend' }]
         }, 'legendid');
       
         map.on('load',function(){
             map.addLayer(featureLayer);
-              legend.startup();
+            map.addLayer(lrtFeatureLayer);
+            map.addLayer(pseLayer);
+            legend.startup();
             featureLayer.redraw();
         });
-
-
-        function pointToExtent (map, point, toleranceInPixel) {
-          var pixelWidth = map.extent.getWidth() / map.width;
-          var toleranceInMapCoords = toleranceInPixel * pixelWidth;
-          return new Extent(point.x - toleranceInMapCoords,
-                            point.y - toleranceInMapCoords,
-                            point.x + toleranceInMapCoords,
-                            point.y + toleranceInMapCoords,
-                            map.spatialReference);
-        }
-        function getTextContent (graphic) {
-          var speciesName = "<b>Value: </b><br/>" +
-                          "<i>" + accessibilityResult[graphic.attributes.TAZ_New] + "</i>";
-          return  speciesName;
-        }
         $("#interact").click(function(e, parameters) {
-        
             if($("#interact").is(':checked')){
                 check = true;
+                $('#sliderNote').html("D&nbspto&nbspO");
+
                 featureLayer.redraw();  
             }
             else{
               check = false;
+              $('#sliderNote').html("O&nbspto&nbspD");
               featureLayer.redraw();
 
             }
         });
+        
+        $('#interact2').click(function(e,parameters){
+  
+          if($('#interact2').is(':checked')){
+              $('#sliderNote2').html("Show&nbspInfo");
+              connections.push(dojo.connect(featureLayer, 'onMouseOver', MouseOverhighlightGraphic));
+          }
+          else{
+              console.log( $('#sliderNote2').text())
+              $('#sliderNote2').html('Hide&nbspInfo');
+              dojo.forEach(connections,dojo.disconnect);
+          }
+        })
 
-    });
+    }
 
 
-}
+});
 
 function buildMatrixLookup(arr) {    
-    var lookup = {};
-    var indexCol = Object.keys(arr[0]).filter(k => k.match(/\s+/) !== null);
-    arr.forEach(row => {
-        var idx = row[indexCol];
-        delete row[indexCol];
-        var newRow = {};
-        for(var key in row){
-            newRow[key] = parseFloat(row[key]);
-        }
-        lookup[idx] = newRow;
-    });
-    return lookup;
+  var lookup = {};
+  var index = arr.columns;
+  var verbal = index[0];
+  for(var i =0; i<arr.length;i++){
+    var k = arr[i][verbal];
+  
+    delete arr[i][verbal];
+  
+    lookup[parseInt(k)] = Object.keys(arr[i]).reduce((obj, key) => (obj[parseInt(key)] = Number(arr[i][key]),obj), {});
+  }
+
+  return lookup;
 }
 
 
@@ -238,4 +407,30 @@ function findRangeForIndividualCalcultion(jobType){
   // }
   // console.log(k)
   return dataMatrix['101'];
+}
+function findMatrix(){
+  $("#wait").css("display", "block");
+  var baseDirect = "../data/"+jobOption+'/Logsum';
+  if(jobOption === 'Work'){
+    baseDirect += incomeOption+'_'+carOption+'.csv';  
+  }
+  else if(jobOption === 'PSE'){
+    baseDirect += carOption+'.csv';
+  }
+  else if(jobOption === 'GS'){
+    baseDirect += gradeOption+'_'+carOption+'.csv';
+  }
+  else if(jobOption==='Other'){
+    if(purposeOption === 'All'){
+      baseDirect+=carOption+'.csv';
+    }
+    else{
+      baseDirect = "../data/Otherpurpose/Logsum"+purposeOption+'_'+carOption+'.csv';
+
+    }
+
+  }
+  console.log(baseDirect)
+  return baseDirect;
+  
 }
