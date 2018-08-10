@@ -150,8 +150,8 @@ input:checked + .slider2:before {
   position:absolute;
   top:400px;
   left:20px;
-  height:300px;
-  overflow-y: scroll;
+  height:150px;
+  /* overflow-y: scroll; */
   z-index:50;
   width:200px;
   border-style: groove;
@@ -188,7 +188,7 @@ select {
   position:absolute;
   right:30px;
   top:180px;
-  width:300px;
+  width:200px;
   height:20px;
   z-index:50;
 }

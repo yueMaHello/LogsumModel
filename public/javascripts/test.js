@@ -15,7 +15,7 @@ var incomeOption = 'Med'; //Hi,Lo
 var carOption = 'Ins';//No, Suff,NCAW
 var purposeOption = "All";//Eat,PB,PUDO,QS,Rec,Shop,Soc
 var gradeOption = "Elem";//Elem,JHS,Pre,SHS_Lic,SHS_NoLic
-var connections =[];
+// var connections =[];
 var selectMatrixName='../data/Work/LogsumMed_Ins.csv';
 // var index = null;
 
@@ -182,7 +182,7 @@ require(["esri/graphic",
           selectMatrixName =findMatrix();
           d3.csv(selectMatrixName,function(d){
             
-            dataMatrix = buildMatrixLookup(d)
+            dataMatrix = buildMatrixLookup(d);
             $("#wait").css("display", "none");
             featureLayer.redraw();
 
@@ -250,27 +250,27 @@ require(["esri/graphic",
             featureLayer.redraw();
         });
       
-        function MouseOverhighlightGraphic(evt){
-          var graphic = evt.graphic;
-          hoverZone = graphic.attributes.TAZ_New;
-          var access;
-          if(check === false){
-            access = dataMatrix[selectZone][hoverZone];
-          }
-          else{
-            access = dataMatrix[hoverZone][selectZone];
-          }
-          
-          map.infoWindow.setTitle("<b>Zone Number: </b>"+hoverZone);
-          if(typeof(access)!=='undefined'){
-            map.infoWindow.setContent("<b><font size=\"3\"> Value:</font> </b>"+ "<font size=\"4\">"+access.toFixed(2)+"</font>");
-          }
-          else{
-            map.infoWindow.setContent("<b><font size=\"3\"> Value:</font> </b>"+ "<font size=\"4\">"+'undefined'+"</font>");
-          }
-          map.infoWindow.show(evt.screenPoint,map.getInfoWindowAnchor(evt.screenPoint));
-        }
-        
+        // function MouseOverhighlightGraphic(evt){
+        //   var graphic = evt.graphic;
+        //   hoverZone = graphic.attributes.TAZ_New;
+        //   var access;
+        //   if(check === false){
+        //     access = dataMatrix[selectZone][hoverZone];
+        //   }
+        //   else{
+        //     access = dataMatrix[hoverZone][selectZone];
+        //   }
+        // 
+        //   map.infoWindow.setTitle("<b>Zone Number: </b>"+hoverZone);
+        //   if(typeof(access)!=='undefined'){
+        //     map.infoWindow.setContent("<b><font size=\"3\"> Value:</font> </b>"+ "<font size=\"4\">"+access.toFixed(2)+"</font>");
+        //   }
+        //   else{
+        //     map.infoWindow.setContent("<b><font size=\"3\"> Value:</font> </b>"+ "<font size=\"4\">"+'undefined'+"</font>");
+        //   }
+        //   map.infoWindow.show(evt.screenPoint,map.getInfoWindowAnchor(evt.screenPoint));
+        // }
+        // 
         
         var accessibilityResult = [];
         largestIndividualArray = findRangeForIndividualCalcultion('what');
@@ -313,7 +313,7 @@ require(["esri/graphic",
         $('#legendDiv').append('<div class="legendClass" id = "legendid" </div>');  
         var legend = new Legend({
           map: map,
-          layerInfos: [{layer:pseLayer,title:'Institutions'},{layer:lrtFeatureLayer,title:'LRT'},{ layer: featureLayer, title: 'Legend' }]
+          layerInfos: [{layer:pseLayer,title:'Institutions'},{layer:lrtFeatureLayer,title:'LRT'}]
         }, 'legendid');
       
         map.on('load',function(){
@@ -342,12 +342,12 @@ require(["esri/graphic",
   
           if($('#interact2').is(':checked')){
               $('#sliderNote2').html("Show&nbspInfo");
-              connections.push(dojo.connect(featureLayer, 'onMouseOver', MouseOverhighlightGraphic));
+              // connections.push(dojo.connect(featureLayer, 'onMouseOver', MouseOverhighlightGraphic));
           }
           else{
               console.log( $('#sliderNote2').text())
               $('#sliderNote2').html('Hide&nbspInfo');
-              dojo.forEach(connections,dojo.disconnect);
+              // dojo.forEach(connections,dojo.disconnect);
           }
         })
 
