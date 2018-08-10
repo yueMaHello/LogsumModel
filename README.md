@@ -1,9 +1,9 @@
-# General Heatmap
-This is a Nodejs web application using Arcgis Javascript API. It is a simple tool which can be modified to display any zone-to-zone matrix.
+# Logsum Model 
+This is a Nodejs web application using Arcgis Javascript API. It shows different logsum matrix in a gravity map format.
 ## Set Up
 1. Download this folder
 2. Browse to the root of the folder
-3. Open the terminal/cmd and go to the root of the App './generalHeatmap'. 
+3. Open the terminal/cmd and go to the root of the App './logsumModel'. 
 4. Type 'npm install'
 5. Type 'npm intall express --save'
 5. Type 'npm install http-errors --save'
