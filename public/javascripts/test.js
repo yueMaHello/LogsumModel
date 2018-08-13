@@ -56,9 +56,9 @@ require(["esri/graphic",
     $('#radios5').radiosToSlider({
         animation: true,
     });      
-    $('#radios2_1').hide();
-    $('#radios4').hide();
-    $('#radios5').hide();
+    $('#radios2_1').css("visibility", "hidden");
+    $('#radios4').css("visibility", "hidden");
+    $('#radios5').css("visibility", "hidden");
     q.defer(d3.csv,selectMatrixName).await(brushMap);
     function brushMap(error,selectMatrix,title){
         $('#radios1').click(function() {
@@ -66,38 +66,39 @@ require(["esri/graphic",
             if(nowJobOption!= jobOption){
               jobOption=nowJobOption;
               if(jobOption === 'PSE'){
-                $('#radios2_1').show();
-                $('#radios2').hide();
-                $('#radios3').hide();
-                $('#radios4').hide();
-                $('#radios5').hide();
+                
+                $('#radios2_1').css("visibility", "visible");
+                $('#radios2').css("visibility", "hidden");
+                $('#radios3').css("visibility", "hidden");
+                $('#radios4').css("visibility", "hidden");
+                $('#radios5').css("visibility", "hidden");
                 selectMatrixName =findMatrix();
   
               }
               else if(jobOption === 'GS'){
-                $('#radios2_1').show();
-                $('#radios2').hide();
-                $('#radios3').hide();
-                $('#radios4').show();
-                $('#radios5').hide();
+                $('#radios2_1').css("visibility", "visible");
+                $('#radios2').css("visibility", "hidden");
+                $('#radios3').css("visibility", "hidden");
+                $('#radios4').css("visibility", "visible");
+                $('#radios5').css("visibility", "hidden");
                 selectMatrixName =findMatrix();
   
               }
               else if(jobOption === 'Work'){
-                $('#radios2_1').hide();
-                $('#radios2').show();
-                $('#radios3').show();
-                $('#radios4').hide();
-                $('#radios5').hide();
+                $('#radios2_1').css("visibility", "hidden");
+                $('#radios2').css("visibility", "visible");
+                $('#radios3').css("visibility", "visible");
+                $('#radios4').css("visibility", "hidden");
+                $('#radios5').css("visibility", "hidden");
                 selectMatrixName =findMatrix();
   
               }
               else if(jobOption === 'Other'){
-                $('#radios2_1').show();
-                $('#radios2').hide();
-                $('#radios3').hide();
-                $('#radios4').hide();
-                $('#radios5').show();
+                $('#radios2_1').css("visibility", "visible");
+                $('#radios2').css("visibility", "hidden");
+                $('#radios3').css("visibility", "hidden");
+                $('#radios4').css("visibility", "hidden");
+                $('#radios5').css("visibility", "visible");
                 selectMatrixName =findMatrix();
               }
               d3.csv(selectMatrixName,function(d){              
