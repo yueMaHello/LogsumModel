@@ -56,9 +56,9 @@ require(["esri/graphic",
     $('#radios5').radiosToSlider({
         animation: true,
     });      
-    $('#radioContainer2_1').hide();
-    $('#radioContainer4').hide();
-    $('#radioContainer5').hide();
+    $('#radios2_1').hide();
+    $('#radios4').hide();
+    $('#radios5').hide();
     q.defer(d3.csv,selectMatrixName).await(brushMap);
     function brushMap(error,selectMatrix,title){
         $('#radios1').click(function() {
@@ -66,38 +66,38 @@ require(["esri/graphic",
             if(nowJobOption!= jobOption){
               jobOption=nowJobOption;
               if(jobOption === 'PSE'){
-                $('#radioContainer2_1').show();
-                $('#radioContainer2').hide();
-                $('#radioContainer3').hide();
-                $('#radioContainer4').hide();
-                $('#radioContainer5').hide();
+                $('#radios2_1').show();
+                $('#radios2').hide();
+                $('#radios3').hide();
+                $('#radios4').hide();
+                $('#radios5').hide();
                 selectMatrixName =findMatrix();
   
               }
               else if(jobOption === 'GS'){
-                $('#radioContainer2_1').show();
-                $('#radioContainer2').hide();
-                $('#radioContainer3').hide();
-                $('#radioContainer4').show();
-                $('#radioContainer5').hide();
+                $('#radios2_1').show();
+                $('#radios2').hide();
+                $('#radios3').hide();
+                $('#radios4').show();
+                $('#radios5').hide();
                 selectMatrixName =findMatrix();
   
               }
               else if(jobOption === 'Work'){
-                $('#radioContainer2_1').hide();
-                $('#radioContainer2').show();
-                $('#radioContainer3').show();
-                $('#radioContainer4').hide();
-                $('#radioContainer5').hide();
+                $('#radios2_1').hide();
+                $('#radios2').show();
+                $('#radios3').show();
+                $('#radios4').hide();
+                $('#radios5').hide();
                 selectMatrixName =findMatrix();
   
               }
               else if(jobOption === 'Other'){
-                $('#radioContainer2_1').show();
-                $('#radioContainer2').hide();
-                $('#radioContainer3').hide();
-                $('#radioContainer4').hide();
-                $('#radioContainer5').show();
+                $('#radios2_1').show();
+                $('#radios2').hide();
+                $('#radios3').hide();
+                $('#radios4').hide();
+                $('#radios5').show();
                 selectMatrixName =findMatrix();
               }
               d3.csv(selectMatrixName,function(d){              

@@ -169,7 +169,7 @@ select {
 }
 #radioContainer1{
   
-  position:absolute;
+  position:fixed;
   right:30px;
   top:100px;
   width:300px;
@@ -177,7 +177,7 @@ select {
   z-index:50;
 }
 #radioContainer2{
-  position:absolute;
+  position:fixed;
   right:30px;
   top:180px;
   width:300px;
@@ -185,7 +185,7 @@ select {
   z-index:50;
 }
 #radioContainer2_1{
-  position:absolute;
+  position:fixed;
   right:30px;
   top:180px;
   width:200px;
@@ -193,7 +193,7 @@ select {
   z-index:50;
 }
 #radioContainer3{
-  position:absolute;
+  position:fixed;
   right:30px;
   top:260px;
   width:200px;
@@ -202,7 +202,7 @@ select {
 
 }
 #radioContainer4{
-  position:absolute;
+  position:fixed;
   right:30px;
   top:260px;
   width:400px;
@@ -211,7 +211,7 @@ select {
   /* visibility: hidden; */
 }
 #radioContainer5{
-  position:absolute;
+  position:fixed;
   right:30px;
   top:260px;
   width:400px;
