@@ -5,7 +5,7 @@ This is a Nodejs web application using Arcgis Javascript API. It shows different
 1. If you haven't downloaded Nodejs on your computer, you need to download it and add it into PATH.
 2. Download this folder
 3. Browse to the root of the folder
-4. Open the terminal/cmd and go to the root of the App './generalHeatmap'. 
+4. Open the terminal/cmd and go to the root of the App './logsumModel'. 
 5. Type 'npm install'
 6. Type 'npm intall express --save'
 7. Type 'npm install http-errors --save'
