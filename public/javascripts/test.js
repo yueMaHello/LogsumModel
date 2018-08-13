@@ -62,6 +62,7 @@ require(["esri/graphic",
     q.defer(d3.csv,selectMatrixName).await(brushMap);
     function brushMap(error,selectMatrix,title){
         $('#radios1').click(function() {
+          
             var nowJobOption = $('input[name=options1]:checked').val();
             if(nowJobOption!= jobOption){
               jobOption=nowJobOption;
@@ -109,7 +110,8 @@ require(["esri/graphic",
             }
         });
         
-        $('#radios2').click(function() {
+        $('#radio2').click(function() {
+          console.log('c')
           var nowCarOption =  $('input[name=options2]:checked').val();
           if(nowCarOption!= carOption){
             carOption = nowCarOption;
