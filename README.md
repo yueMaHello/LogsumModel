@@ -11,7 +11,7 @@ This is a Nodejs web application using Arcgis Javascript API. It shows different
 7. Type 'npm install http-errors --save'
 8. Type 'npm install fs --save'
 9. Put your csv data into './public/data' folder. Cherry can help with the data source. Finally, './data' folder should consist five other folders: './data/GS', './data/Other', './data/Otherpurpose', './data/PSE', and './data/Work'
-10. The data must have the same format as the example data located in './public/dataExample/Auto Time.csv'.
+10. Each CSV file must have the same format as the example data located in './public/dataExample/Auto Time.csv'. For element in row[0]column[0], it can be empty or some text.
 #### From Lab Computer I
 1. Browse to the root of the folder
 2. Open the terminal/cmd and go to the root of the App './logsumModel'. 
