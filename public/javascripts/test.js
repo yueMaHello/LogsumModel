@@ -1,9 +1,5 @@
 var map;
-var geoJsonLayer1;
-// var SOV_AUTO_Time_AM_Cr_mf1 = '../data/'+title+'.csv';
 var dataMatrix;
-var popEmp;
-var travelTypeDict = {};
 var q = d3.queue();
 var check = false;
 var largestIndividualArray = [];
@@ -16,27 +12,14 @@ var carOption = 'Ins';//No, Suff,NCAW
 var purposeOption = "All";//Eat,PB,PUDO,QS,Rec,Shop,Soc
 var gradeOption = "Elem";//Elem,JHS,Pre,SHS_Lic,SHS_NoLic
 var selectMatrixName='../data/Work/LogsumMed_Ins.csv';
-require(["esri/graphic",
-  "esri/geometry/Polyline",
-  "esri/geometry/Extent",
-  "dojo/dom-construct",
-  "esri/tasks/query",
-  "esri/dijit/Popup",
-  "esri/dijit/PopupTemplate",
-  "dojo/dom-class",
-  "esri/dijit/BasemapToggle",
-  "esri/dijit/Legend",
-    "esri/map", "esri/layers/FeatureLayer",
-    "esri/InfoTemplate", "esri/symbols/SimpleFillSymbol", "esri/symbols/SimpleLineSymbol",
-    "esri/renderers/ClassBreaksRenderer",
-    "esri/Color", "dojo/dom-style", "dojo/domReady!"
-], function(Graphic,Polyline,
-  Extent,domConstruct,
-  Query,Popup, PopupTemplate,domClass,BasemapToggle,Legend,
-    Map, FeatureLayer,
-    InfoTemplate, SimpleFillSymbol,SimpleLineSymbol,
-    ClassBreaksRenderer,
-    Color, domStyle
+require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
+  "esri/tasks/query","esri/dijit/Popup",
+  "dojo/dom-class","esri/dijit/BasemapToggle","esri/dijit/Legend",
+  "esri/map", "esri/layers/FeatureLayer","esri/symbols/SimpleFillSymbol", 
+  "esri/symbols/SimpleLineSymbol","esri/renderers/ClassBreaksRenderer",
+  "esri/Color", "dojo/dom-style", "dojo/domReady!"
+], function(Graphic,Polyline,domConstruct,Query,Popup,domClass,BasemapToggle,Legend,Map, FeatureLayer,
+  SimpleFillSymbol,SimpleLineSymbol,ClassBreaksRenderer,Color, domStyle
 ) { 
     $('#radios1').radiosToSlider({
         animation: true,
