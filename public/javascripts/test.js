@@ -111,7 +111,6 @@ require(["esri/graphic",
         });
         
         $('#radio2').click(function() {
-          console.log('c')
           var nowCarOption =  $('input[name=options2]:checked').val();
           if(nowCarOption!= carOption){
             carOption = nowCarOption;
