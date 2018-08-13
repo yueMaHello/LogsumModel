@@ -23,7 +23,8 @@ This is a Nodejs web application using Arcgis Javascript API. It shows different
 2. Browse 'http://localhost:3034'
 
 ## Use tips:
-
+#### If you want to update the dataset:
+All the logsum data set is provided by Cherry. If you just want to simply renew the dataset without changing the structure or name, you can replace csv files into new ones one by one.
 #### If you want to update the TravelZoneLayer shape file:
  1. The map layer is not stored in localhost. It is stored in the arcgis online server.
  2. In './public/javascript/test.js', you can find the current layer: 'https://services8.arcgis.com/FCQ1UtL7vfUUEwH7/arcgis/rest/services/newestTAZ/FeatureServer/0?token=8gOmRemAl8guD3WA_rfLwe50SgsEvaZzIcXIraH9xC3NQPCLraLwcHIkz3osWU-SHUdSKO1N6rCnWDF_CzWLFlFFUCeugETS44f409SsCtX9eC-HoX0dkXZj2vQD1SsboTGNgAzLDtG-BfIv0FnlWBNqq84hC5a6e7lj2Tt1oV8V0WxGiCE7rtaXgxZr18TZur-l_T6gWW2jDh1mt5q0mqty8vc133DvOtg5JhtGm8OTdn9rYtscRKu66B153RYB'. If you want to change it to another layer, you can create you own arcgis online account and upload the layer to the arcgis server. You need to replace the url into a new one. You can also ask Sandeep to access Yue Ma's arcgis account.
