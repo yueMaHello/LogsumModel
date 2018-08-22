@@ -2,13 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="899e5cbc-189c-49bf-ba87-5736ec67466a" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml___jb_tmp___" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/public/javascripts/test.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/javascripts/test.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/javascripts/test.js___jb_tmp___" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/stylesheets/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/stylesheets/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/stylesheets/style.css___jb_tmp___" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/index.jade" beforeDir="false" afterPath="$PROJECT_DIR$/views/index.jade" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -48,8 +42,8 @@
       <file leaf-file-name="index.jade" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/views/index.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="289">
-              <caret line="29" column="79" selection-start-line="29" selection-start-column="79" selection-end-line="29" selection-end-column="79" />
+            <state relative-caret-position="255">
+              <caret line="27" column="33" selection-start-line="27" selection-start-column="33" selection-end-line="27" selection-end-column="33" />
             </state>
           </provider>
         </entry>
@@ -538,8 +532,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/views/index.jade">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="29" column="79" selection-start-line="29" selection-start-column="79" selection-end-line="29" selection-end-column="79" />
+        <state relative-caret-position="255">
+          <caret line="27" column="33" selection-start-line="27" selection-start-column="33" selection-end-line="27" selection-end-column="33" />
         </state>
       </provider>
     </entry>
