@@ -27,9 +27,7 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
     $('#radios2').radiosToSlider({
         animation: true,
     });    
-    $('#radios2_1').radiosToSlider({
-        animation: true,
-    }); 
+  
     $('#radios3').radiosToSlider({
         animation: true,
     });      
@@ -38,8 +36,11 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
     });      
     $('#radios5').radiosToSlider({
         animation: true,
-    });      
-    // $('#radios2_1').css("visibility", "hidden");
+    });    
+    $('#radios6').radiosToSlider({
+        animation: true,
+    });   
+    $('#radios6').css("visibility", "hidden");
     $('#radios4').css("visibility", "hidden");
     $('#radios5').css("visibility", "hidden");
     q.defer(d3.csv,selectMatrixName).await(brushMap);
@@ -51,8 +52,8 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
               jobOption=nowJobOption;
               if(jobOption === 'PSE'){
                 //
-                // $('#radios2_1').css("visibility", "visible");
-                // $('#radios2').css("visibility", "hidden");
+                $('#radios6').css("visibility", "visible");
+                $('#radios2').css("visibility", "hidden");
                 $('#radios3').css("visibility", "hidden");
                 $('#radios4').css("visibility", "hidden");
                 $('#radios5').css("visibility", "hidden");
@@ -60,8 +61,8 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
   
               }
               else if(jobOption === 'GS'){
-                // $('#radios2_1').css("visibility", "visible");
-                // $('#radios2').css("visibility", "hidden");
+                $('#radios6').css("visibility", "visible");
+                $('#radios2').css("visibility", "hidden");
                 $('#radios3').css("visibility", "hidden");
                 $('#radios4').css("visibility", "visible");
                 $('#radios5').css("visibility", "hidden");
@@ -69,8 +70,8 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
   
               }
               else if(jobOption === 'Work'){
-                // $('#radios2_1').css("visibility", "hidden");
-                // $('#radios2').css("visibility", "visible");
+                $('#radios2').css("visibility", "visible");
+                $('#radios6').css("visibility", "hidden");
                 $('#radios3').css("visibility", "visible");
                 $('#radios4').css("visibility", "hidden");
                 $('#radios5').css("visibility", "hidden");
@@ -78,8 +79,8 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
   
               }
               else if(jobOption === 'Other'){
-                // $('#radios2_1').css("visibility", "visible");
-                // $('#radios2').css("visibility", "hidden");
+                $('#radios6').css("visibility", "visible");
+                $('#radios2').css("visibility", "hidden");
                 $('#radios3').css("visibility", "hidden");
                 $('#radios4').css("visibility", "hidden");
                 $('#radios5').css("visibility", "visible");
@@ -127,6 +128,14 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
           var nowPurposeOption =  $('input[name=options5]:checked').val();
           if(purposeOption != nowPurposeOption){
             purposeOption = nowPurposeOption;
+            redrawLayer();
+          }
+        });
+        
+        $('#radios6').click(function() {
+          var nowCarOption =  $('input[name=options6]:checked').val();
+          if(nowCarOption!= carOption){
+            carOption = nowCarOption;
             redrawLayer();
           }
         });
