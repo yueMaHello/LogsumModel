@@ -39,7 +39,7 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
     $('#radios5').radiosToSlider({
         animation: true,
     });      
-    $('#radios2_1').css("visibility", "hidden");
+    // $('#radios2_1').css("visibility", "hidden");
     $('#radios4').css("visibility", "hidden");
     $('#radios5').css("visibility", "hidden");
     q.defer(d3.csv,selectMatrixName).await(brushMap);
@@ -50,9 +50,9 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
             if(nowJobOption!= jobOption){
               jobOption=nowJobOption;
               if(jobOption === 'PSE'){
-                
-                $('#radios2_1').css("visibility", "visible");
-                $('#radios2').css("visibility", "hidden");
+                //
+                // $('#radios2_1').css("visibility", "visible");
+                // $('#radios2').css("visibility", "hidden");
                 $('#radios3').css("visibility", "hidden");
                 $('#radios4').css("visibility", "hidden");
                 $('#radios5').css("visibility", "hidden");
@@ -60,8 +60,8 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
   
               }
               else if(jobOption === 'GS'){
-                $('#radios2_1').css("visibility", "visible");
-                $('#radios2').css("visibility", "hidden");
+                // $('#radios2_1').css("visibility", "visible");
+                // $('#radios2').css("visibility", "hidden");
                 $('#radios3').css("visibility", "hidden");
                 $('#radios4').css("visibility", "visible");
                 $('#radios5').css("visibility", "hidden");
@@ -69,8 +69,8 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
   
               }
               else if(jobOption === 'Work'){
-                $('#radios2_1').css("visibility", "hidden");
-                $('#radios2').css("visibility", "visible");
+                // $('#radios2_1').css("visibility", "hidden");
+                // $('#radios2').css("visibility", "visible");
                 $('#radios3').css("visibility", "visible");
                 $('#radios4').css("visibility", "hidden");
                 $('#radios5').css("visibility", "hidden");
@@ -78,8 +78,8 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
   
               }
               else if(jobOption === 'Other'){
-                $('#radios2_1').css("visibility", "visible");
-                $('#radios2').css("visibility", "hidden");
+                // $('#radios2_1').css("visibility", "visible");
+                // $('#radios2').css("visibility", "hidden");
                 $('#radios3').css("visibility", "hidden");
                 $('#radios4').css("visibility", "hidden");
                 $('#radios5').css("visibility", "visible");
@@ -92,16 +92,16 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
               });
             }
         });
-        
-        $('#radio2').click(function() {
+        //
+        // $('#radio2').click(function() {
+        //   var nowCarOption =  $('input[name=options2]:checked').val();
+        //   if(nowCarOption!= carOption){
+        //     carOption = nowCarOption;
+        //     redrawLayer();
+        //   }
+        // });
+        $('#radios2').click(function() {
           var nowCarOption =  $('input[name=options2]:checked').val();
-          if(nowCarOption!= carOption){
-            carOption = nowCarOption;
-            redrawLayer();
-          }    
-        });
-        $('#radios2_1').click(function() {
-          var nowCarOption =  $('input[name=options2_1]:checked').val();
           if(nowCarOption!= carOption){
             carOption = nowCarOption;
             redrawLayer();
@@ -295,7 +295,7 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
 
 function buildMatrixLookup(arr) {    
   var lookup = {};
-  var index = arr.columns
+  var index = arr.columns;
   var verbal = index[0];
   for(var i =0; i<arr.length;i++){
     var k = arr[i][verbal];
