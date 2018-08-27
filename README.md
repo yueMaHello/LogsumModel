@@ -29,7 +29,7 @@ All the logsum data set is provided by Cherry. If you just want to simply renew 
  1. The map layer is not stored in localhost. It is stored in the arcgis online server.
  2. In './public/javascript/test.js', you can find the current layer: 'https://services8.arcgis.com/FCQ1UtL7vfUUEwH7/arcgis/rest/services/newestTAZ/FeatureServer/0'. If you want to change it to another layer, you can create you own arcgis online account and upload the layer to the arcgis server. You need to replace the url into a new one. You can also ask Sandeep to access Yue Ma's arcgis account.
 #### If you want to change the legend:
-1. Open './public/test.js' file, search 'readerer.addBreak' to show that part of code.
+1. Open './public/javascripts/test.js' file, search 'readerer.addBreak' to show that part of code.
 2. Right now, the break points all are calculated based on data of zone[101]. It can adjust the legend to suit different dataset. If you want to change the break points, you could just manually change 'sort[chunkZone]' to some specific value. 
       For exampe:
       * renderer.addBreak(0, 70, new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([255, 255, 255,0.90])));
