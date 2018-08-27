@@ -11,7 +11,8 @@ var incomeOption = 'Med'; //Hi,Lo
 var carOption = 'Ins';//No, Suff,NCAW
 var purposeOption = "All";//Eat,PB,PUDO,QS,Rec,Shop,Soc
 var gradeOption = "Elem";//Elem,JHS,Pre,SHS_Lic,SHS_NoLic
-var selectMatrixName='../data/Work/LogsumMed_Ins.csv';
+var selectMatrixName='../data/Work/LogsumMed_Ins.csv'; //default matrix, show when loading the web page
+//load esri libraries
 require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
   "esri/tasks/query","esri/dijit/Popup",
   "dojo/dom-class","esri/dijit/BasemapToggle","esri/dijit/Legend",
@@ -20,37 +21,26 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
   "esri/Color", "dojo/dom-style", "dojo/domReady!"
 ], function(Graphic,Polyline,domConstruct,Query,Popup,domClass,BasemapToggle,Legend,Map, FeatureLayer,
   SimpleFillSymbol,SimpleLineSymbol,ClassBreaksRenderer,Color, domStyle
-) { 
-    $('#radios1').radiosToSlider({
-        animation: true,
-    });     
-    $('#radios2').radiosToSlider({
-        animation: true,
-    });    
-  
-    $('#radios3').radiosToSlider({
-        animation: true,
-    });      
-    $('#radios4').radiosToSlider({
-        animation: true,
-    });      
-    $('#radios5').radiosToSlider({
-        animation: true,
-    });    
-    $('#radios6').radiosToSlider({
-        animation: true,
-    });   
+) { //convert radios to slider
+    $('#radios1').radiosToSlider({animation: true});     
+    $('#radios2').radiosToSlider({animation: true});      
+    $('#radios3').radiosToSlider({animation: true});        
+    $('#radios4').radiosToSlider({animation: true});     
+    $('#radios5').radiosToSlider({animation: true});    
+    $('#radios6').radiosToSlider({animation: true});
+    //hide unused sliders     
     $('#radios6').css("visibility", "hidden");
     $('#radios4').css("visibility", "hidden");
     $('#radios5').css("visibility", "hidden");
+    //load default csv
     q.defer(d3.csv,selectMatrixName).await(brushMap);
     function brushMap(error,selectMatrix,title){
+      //click radio1 button, the visibility property of other radios is based on radio1 button
         $('#radios1').click(function() {
             var nowJobOption = $('input[name=options1]:checked').val();
             if(nowJobOption!= jobOption){
               jobOption=nowJobOption;
               if(jobOption === 'PSE'){
-                //
                 $('#radios6').css("visibility", "visible");
                 $('#radios2').css("visibility", "hidden");
                 $('#radios3').css("visibility", "hidden");
@@ -85,6 +75,7 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
                 $('#radios5').css("visibility", "visible");
                 selectMatrixName =findMatrix();
               }
+              //read selected matrix and replot the map
               d3.csv(selectMatrixName,function(d){              
                 dataMatrix = buildMatrixLookup(d);
                 $("#wait").css("display", "none");
@@ -92,14 +83,7 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
               });
             }
         });
-        //
-        // $('#radio2').click(function() {
-        //   var nowCarOption =  $('input[name=options2]:checked').val();
-        //   if(nowCarOption!= carOption){
-        //     carOption = nowCarOption;
-        //     redrawLayer();
-        //   }
-        // });
+
         $('#radios2').click(function() {
           var nowCarOption =  $('input[name=options2]:checked').val();
           if(nowCarOption!= carOption){
@@ -168,17 +152,17 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
          
          toggle.startup();
                
-        var featureLayer = new FeatureLayer("https://services8.arcgis.com/FCQ1UtL7vfUUEwH7/arcgis/rest/services/newestTAZ/FeatureServer/0?token=8gOmRemAl8guD3WA_rfLwe50SgsEvaZzIcXIraH9xC3NQPCLraLwcHIkz3osWU-SHUdSKO1N6rCnWDF_CzWLFlFFUCeugETS44f409SsCtX9eC-HoX0dkXZj2vQD1SsboTGNgAzLDtG-BfIv0FnlWBNqq84hC5a6e7lj2Tt1oV8V0WxGiCE7rtaXgxZr18TZur-l_T6gWW2jDh1mt5q0mqty8vc133DvOtg5JhtGm8OTdn9rYtscRKu66B153RYB",{
+        var featureLayer = new FeatureLayer("https://services8.arcgis.com/FCQ1UtL7vfUUEwH7/arcgis/rest/services/newestTAZ/FeatureServer/0",{
             mode: FeatureLayer.MODE_SNAPSHOT,
             outFields: ["*"],
     
         });
-        var lrtFeatureLayer = new FeatureLayer("https://services8.arcgis.com/FCQ1UtL7vfUUEwH7/arcgis/rest/services/LRT/FeatureServer/0?token=fq-1SwmcgAepCE9kB7p1ySJqJl4Tj4PVlZ1Bcbso2r9RBv1BCdET4mcpDLteGYoyOFSkDrwBRilzkmzMzr5KyZKLhqCULVNivn-LyH2WXxPESB1NRpyXQZz9NiNEdGGXdB3zQM1cH17XBTu8-keOmeUMh0UaJQ7VGweheUREf9wPsPdThCFpIwfFZ-ZrKuatP4JDGf8qZLZUQpYii04YFz_Po6MOQmuWcKAVMbFYIWIQTiSXgGJRiXA0BUpzOio3",{
+        var lrtFeatureLayer = new FeatureLayer("https://services8.arcgis.com/FCQ1UtL7vfUUEwH7/arcgis/rest/services/LRT/FeatureServer/0",{
             mode: FeatureLayer.MODE_SNAPSHOT,
             outFields: ["*"],
         });
         // PSELayer = addPSELocation();
-        var pseLayer = new FeatureLayer("https://services8.arcgis.com/FCQ1UtL7vfUUEwH7/arcgis/rest/services/pse/FeatureServer/0?token=Z-SDaJDXBiNKlWI9q05NjRiKcjoysekbM2vYNhYD6gETiJzS7IggUYgO3fQ8yua2FMceup7wEsz440QpyduUiuu-OoAUMsjIOaqgrhjAU3oqoorIKY6HsM1-jpLgNPof-YrNhlTq04cJs9Soi0RqIjr3gCtuCaR74_0mLSjVN42R2okTrgOl7pr7thQEdveBKh6zNGgmrYMJiGtGA6dLwUgpJC59-9RL63-SoxDZdLDiwygEyy3wMP_lKcCbOPPU",{
+        var pseLayer = new FeatureLayer("https://services8.arcgis.com/FCQ1UtL7vfUUEwH7/arcgis/rest/services/pse/FeatureServer/0",{
             mode: FeatureLayer.MODE_SNAPSHOT,
             outFields: ["*"],
         });
@@ -199,38 +183,18 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
             map.graphics.add(highlightGraphic);
             featureLayer.redraw();
         });
-      
-        // function MouseOverhighlightGraphic(evt){
-        //   var graphic = evt.graphic;
-        //   hoverZone = graphic.attributes.TAZ_New;
-        //   var access;
-        //   if(check === false){
-        //     access = dataMatrix[selectZone][hoverZone];
-        //   }
-        //   else{
-        //     access = dataMatrix[hoverZone][selectZone];
-        //   }
-        // 
-        //   map.infoWindow.setTitle("<b>Zone Number: </b>"+hoverZone);
-        //   if(typeof(access)!=='undefined'){
-        //     map.infoWindow.setContent("<b><font size=\"3\"> Value:</font> </b>"+ "<font size=\"4\">"+access.toFixed(2)+"</font>");
-        //   }
-        //   else{
-        //     map.infoWindow.setContent("<b><font size=\"3\"> Value:</font> </b>"+ "<font size=\"4\">"+'undefined'+"</font>");
-        //   }
-        //   map.infoWindow.show(evt.screenPoint,map.getInfoWindowAnchor(evt.screenPoint));
-        // }
-        // 
         var accessibilityResult = [];
-        largestIndividualArray = findRangeForIndividualCalcultion('what');
+        largestIndividualArray = findRangeForIndividualCalcultion();
         sort = Object.values(largestIndividualArray).sort((prev,next)=>prev-next); //from smallest to largest
         sort = sort.map(x =>x.toFixed(2));
         var chunkZones = 89;        
         var symbol = new SimpleFillSymbol(); 
         var renderer = new ClassBreaksRenderer(symbol, function(feature){
+          //if 'var check' is false, then show origin to destination
           if(check === false){
             return dataMatrix[selectZone][feature.attributes.TAZ_New];
           }
+          //else, destination to origin
           else{
             return dataMatrix[feature.attributes.TAZ_New][selectZone];
           }
@@ -257,7 +221,6 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
        renderer.addBreak(sort[18*chunkZones], Infinity, new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([5, 80, 15,0.90])));
        featureLayer.setRenderer(renderer);
        //legend
-    
         $('#legendDiv').append('<div class="legendClass" id = "legendid" </div>');  
         var legend = new Legend({
           map: map,
@@ -271,11 +234,11 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
             legend.startup();
             featureLayer.redraw();
         });
+        //slider which is used to switch between 'destination to origin' and 'origin to destination'
         $("#interact").click(function(e, parameters) {
             if($("#interact").is(':checked')){
                 check = true;
                 $('#sliderNote').html("D&nbspto&nbspO");
-
                 featureLayer.redraw();  
             }
             else{
@@ -285,22 +248,10 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
 
             }
         });
-        
-        $('#interact2').click(function(e,parameters){
-  
-          if($('#interact2').is(':checked')){
-              $('#sliderNote2').html("Show&nbspInfo");
-              // connections.push(dojo.connect(featureLayer, 'onMouseOver', MouseOverhighlightGraphic));
-          }
-          else{
-              console.log( $('#sliderNote2').text())
-              $('#sliderNote2').html('Hide&nbspInfo');
-              // dojo.forEach(connections,dojo.disconnect);
-          }
-        })
+
     }
 });
-
+//read csv file into a 2d matrix
 function buildMatrixLookup(arr) {    
   var lookup = {};
   var index = arr.columns;
@@ -312,10 +263,11 @@ function buildMatrixLookup(arr) {
   }
   return lookup;
 }
-
-function findRangeForIndividualCalcultion(jobType){
+//legend is based on this range
+function findRangeForIndividualCalcultion(){
   return dataMatrix['101'];
 }
+//read radio buttons value and return selected matrix url
 function findMatrix(){
   $("#wait").css("display", "block");
   var baseDirect = "../data/"+jobOption+'/Logsum';

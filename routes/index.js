@@ -5,43 +5,43 @@ var appName = 'Logsum Model';
 var folderNamesAndCsvNames = {};
 var folderNames = walkfolders('./public/data/');
 
-// 
-// Array.prototype.contains = function(element){
-//     return this.indexOf(element) > -1;
-// };
-// for(var i=0;i<folderNames.length;i++){
-//   var csvNames = walkfolders('./public/data/'+folderNames[i]);
-//   //console.log(csvNames)
-//   var usefulPart = csvNames[0].split('.csv')[0].split('Logsum')[1].split('_')
-//   var usefulLength = usefulPart.length;
-//   folderNamesAndCsvNames[folderNames[i]] = {}
-//   for(var n=0;n<usefulLength;n++){
-// 
-//     folderNamesAndCsvNames[folderNames[i]][n] = [];
-//   }  
-//   console.log(folderNamesAndCsvNames)
-// 
-//   for(var j=0;j<csvNames.length;j++){
-//     var usefulPart = csvNames[j].split('.csv')[0].split('Logsum')[1].split('_')
-//     var usefulLength = usefulPart.length
-//     for(var m=0;m<usefulLength;m++){
-//       console.log(folderNamesAndCsvNames[folderNames[i]][0])
-//       if(folderNamesAndCsvNames[folderNames[i]][m].contains(usefulPart[m])<0){
-//         folderNamesAndCsvNames[folderNames[i]][m].push(usefulPart[m]);
-//       }
-// 
-//     }
-// 
-//   }
-// 
-// }
-// 
-// console.log(folderNamesAndCsvNames)
+
+Array.prototype.contains = function(element){
+    return this.indexOf(element) > -1;
+};
+for(var i=0;i<folderNames.length;i++){
+  var csvNames = walkfolders('./public/data/'+folderNames[i]);
+  //console.log(csvNames)
+  var usefulPart = csvNames[0].split('.csv')[0].split('Logsum')[1].split('_')
+  var usefulLength = usefulPart.length;
+  folderNamesAndCsvNames[folderNames[i]] = {}
+  for(var n=0;n<usefulLength;n++){
+
+    folderNamesAndCsvNames[folderNames[i]][n] = [];
+  }  
+
+
+  for(var j=0;j<csvNames.length;j++){
+    var usefulPart = csvNames[j].split('.csv')[0].split('Logsum')[1].split('_')
+    for(var m=0;m<usefulPart.length;m++){
+      if(typeof(folderNamesAndCsvNames[folderNames[i]][m])!='undefined'){
+        if(folderNamesAndCsvNames[folderNames[i]][m].contains(usefulPart[m])===false){
+        
+          folderNamesAndCsvNames[folderNames[i]][m].push(usefulPart[m]);
+        }
+      }
+
+
+    }
+
+  }
+
+}
 
 
 
 router.get('/', function(req, res, next) {
-    res.render('index', { title: appName});
+    res.render('index', { title: appName,sliderType:folderNamesAndCsvNames});
 });
 
 
