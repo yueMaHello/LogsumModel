@@ -1,5 +1,5 @@
 # Logsum Model 
-This is a Nodejs web application using Arcgis Javascript API. It shows different logsum matrix in a gravity map format.
+This is a Nodejs web application using Arcgis Javascript API. It shows logsum matrixs in a gravity map format. The user can change the combinations of properties on the right corner to get various results.
 ## Set Up
 #### From Github:
 1. If you haven't downloaded Nodejs on your computer, you need to download it and add it into PATH.
