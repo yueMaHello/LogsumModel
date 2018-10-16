@@ -1,14 +1,23 @@
+/*This is an application show logsum model based on travel purpose, income level, auto condition and so on.
+As you can see in the './data' folder, there are several sub folders. Files in each sub folder also have different naming formats.
+Currently, the app uses six sliders to knowing which one it should choose.
+Those six sliders will never be shown at the same time, and sliders will hide and show based on selected Job type (sub folder's name)
+Since the logic behind the selection may be not easy to understand, it would be better if you could follow the same data format to update the data.
+Otherwise, you will need to change the code to let it suit your newest dataset.
+The data in 'dataExample' folder is just a zone-to-zone matrix. It is not sufficient to run the app. You need to follow the format in './data' folder
+*/
 var map;
 var dataMatrix;
 var q = d3.queue();
-var check = false;
+var check = false;//default condition for slider
 var largestIndividualArray = [];
 var sort = [];
 var selectZone = '101'; //default
-var hoverZone;
+//initialization of selections
 var jobOption = 'Work'; //PSE,Other,Otherpurpose,GS
 var incomeOption = 'Med'; //Hi,Lo
-var carOption = 'Ins';//No, Suff,NCAW
+var carOption = 'Ins';//No, Suff, Ins, NCAW
+var carOption3 = 'Ins';//no suff ins
 var purposeOption = "All";//Eat,PB,PUDO,QS,Rec,Shop,Soc
 var gradeOption = "Elem";//Elem,JHS,Pre,SHS_Lic,SHS_NoLic
 var selectMatrixName='../data/Work/LogsumMed_Ins.csv'; //default matrix, show when loading the web page
@@ -37,9 +46,12 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
     function brushMap(error,selectMatrix,title){
       //click radio1 button, the visibility property of other radios is based on radio1 button
         $('#radios1').click(function() {
+            //read current job selection
             var nowJobOption = $('input[name=options1]:checked').val();
+            //if changed
             if(nowJobOption!= jobOption){
               jobOption=nowJobOption;
+              //different job selection will show different sliders combination
               if(jobOption === 'PSE'){
                 $('#radios6').css("visibility", "visible");
                 $('#radios2').css("visibility", "hidden");
@@ -47,7 +59,6 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
                 $('#radios4').css("visibility", "hidden");
                 $('#radios5').css("visibility", "hidden");
                 selectMatrixName =findMatrix();
-  
               }
               else if(jobOption === 'GS'){
                 $('#radios6').css("visibility", "visible");
@@ -116,9 +127,9 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
         });
         
         $('#radios6').click(function() {
-          var nowCarOption =  $('input[name=options6]:checked').val();
-          if(nowCarOption!= carOption){
-            carOption = nowCarOption;
+          var nowCarOption3 =  $('input[name=options6]:checked').val();
+          if(nowCarOption3!= carOption3){
+            carOption3 = nowCarOption3;
             redrawLayer();
           }
         });
@@ -144,7 +155,7 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
             minZoom:6,
             slider: false
         });
-        
+        //basemap toggle
         var toggle = new BasemapToggle({
            map: map,
            basemap: "streets"
@@ -264,10 +275,11 @@ function buildMatrixLookup(arr) {
   return lookup;
 }
 //legend is based on this range
+//why zone 101? Since it is the center of the city
 function findRangeForIndividualCalcultion(){
   return dataMatrix['101'];
 }
-//read radio buttons value and return selected matrix url
+//read radio buttons value and return selected csv url
 function findMatrix(){
   $("#wait").css("display", "block");
   var baseDirect = "../data/"+jobOption+'/Logsum';
@@ -275,17 +287,17 @@ function findMatrix(){
     baseDirect += incomeOption+'_'+carOption+'.csv';  
   }
   else if(jobOption === 'PSE'){
-    baseDirect += carOption+'.csv';
+    baseDirect += carOption3+'.csv';
   }
   else if(jobOption === 'GS'){
-    baseDirect += gradeOption+'_'+carOption+'.csv';
+    baseDirect += gradeOption+'_'+carOption3+'.csv';
   }
   else if(jobOption==='Other'){
     if(purposeOption === 'All'){
-      baseDirect+=carOption+'.csv';
+      baseDirect+=carOption3+'.csv';
     }
     else{
-      baseDirect = "../data/Otherpurpose/Logsum"+purposeOption+'_'+carOption+'.csv';
+      baseDirect = "../data/Otherpurpose/Logsum"+purposeOption+'_'+carOption3+'.csv';
     }
   }
   console.log(baseDirect);
