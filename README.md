@@ -1,9 +1,11 @@
 # Logsum Model 
 This is a Nodejs web application using Arcgis Javascript API. It shows logsum matrixs in a gravity map format. The user can change the combinations of properties on the right corner to get various results.
+
 As you can see in the './data' folder, there are several sub folders. Files in each sub folder also have different naming formats.
-Currently, the app uses six sliders to know which sliders it should choose.
-Those six sliders will show at the same time, and sliders will hide and show based on selected job type.
+Currently, the app uses six sliders to know which sliders it should choose. Those six sliders will show at the same time, and sliders will hide and show based on selected job type.
+
 Since the logic behind the selection may be not easy to understand, it would be better if you could follow the same data format to update the data. Otherwise, you will need to change the code to let it suit your newest dataset.
+
 The data in 'dataExample' folder is just a zone-to-zone matrix. It is not sufficient data example to run the app. You need to follow the format in './data' folder
 
 ## Set Up
