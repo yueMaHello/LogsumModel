@@ -45,7 +45,9 @@ All the logsum data set is provided by Cherry. If you just want to simply renew 
 #### If you want to change the legend color:
 1. Open './public/javascripts/test.js' file, search 'readerer.addBreak' to show that part of code.
 2. Change 'new Color([255, 255, 255,0.90])' to some other RGB color.
-      
+#### Rules of selection
+1. The user needs to select job type first (Work,PSE,Grade School, Others...)
+2. The app will show and hide slider based on job type selection
 #### Woops, the App can't run after changing a new dataset:
  1. You need to restart the server from terminal/cmd (Rerun 'npm start').
 
