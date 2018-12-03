@@ -223,3 +223,12 @@ select {
   /* visibility: hidden; */
 
 }
+#dynamicRadioContainers{
+    position:fixed;
+    right:55px;
+    top:100px;
+    width:400px;
+    height:300px;
+    z-index:50;
+
+}

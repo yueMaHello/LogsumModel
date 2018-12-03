@@ -20,7 +20,7 @@ var carOption = 'Ins';//No, Suff, Ins, NCAW
 var carOption3 = 'Ins';//no suff ins
 var purposeOption = "All";//Eat,PB,PUDO,QS,Rec,Shop,Soc
 var gradeOption = "Elem";//Elem,JHS,Pre,SHS_Lic,SHS_NoLic
-var selectMatrixName='../data/Work/LogsumMed_Ins.csv'; //default matrix, show when loading the web page
+var selectMatrixName='../data/Work/Medium Income/Insuff Car.csv'; //default matrix, show when loading the web page
 //load esri libraries
 require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
   "esri/tasks/query","esri/dijit/Popup",
@@ -31,111 +31,89 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
 ], function(Graphic,Polyline,domConstruct,Query,Popup,domClass,BasemapToggle,Legend,Map, FeatureLayer,
   SimpleFillSymbol,SimpleLineSymbol,ClassBreaksRenderer,Color, domStyle
 ) { //convert radios to slider
-    $('#radios1').radiosToSlider({animation: true});     
-    $('#radios2').radiosToSlider({animation: true});      
-    $('#radios3').radiosToSlider({animation: true});        
-    $('#radios4').radiosToSlider({animation: true});     
-    $('#radios5').radiosToSlider({animation: true});    
-    $('#radios6').radiosToSlider({animation: true});
-    //hide unused sliders     
-    $('#radios6').css("visibility", "hidden");
-    $('#radios4').css("visibility", "hidden");
-    $('#radios5').css("visibility", "hidden");
+
     //load default csv
     q.defer(d3.csv,selectMatrixName).await(brushMap);
     function brushMap(error,selectMatrix,title){
-      //click radio1 button, the visibility property of other radios is based on radio1 button
-        $('#radios1').click(function() {
-            //read current job selection
-            var nowJobOption = $('input[name=options1]:checked').val();
-            //if changed
-            if(nowJobOption!= jobOption){
-              jobOption=nowJobOption;
-              //different job selection will show different sliders combination
-              if(jobOption === 'PSE'){
-                $('#radios6').css("visibility", "visible");
-                $('#radios2').css("visibility", "hidden");
-                $('#radios3').css("visibility", "hidden");
-                $('#radios4').css("visibility", "hidden");
-                $('#radios5').css("visibility", "hidden");
-                selectMatrixName =findMatrix();
-              }
-              else if(jobOption === 'GS'){
-                $('#radios6').css("visibility", "visible");
-                $('#radios2').css("visibility", "hidden");
-                $('#radios3').css("visibility", "hidden");
-                $('#radios4').css("visibility", "visible");
-                $('#radios5').css("visibility", "hidden");
-                selectMatrixName =findMatrix();
-  
-              }
-              else if(jobOption === 'Work'){
-                $('#radios2').css("visibility", "visible");
-                $('#radios6').css("visibility", "hidden");
-                $('#radios3').css("visibility", "visible");
-                $('#radios4').css("visibility", "hidden");
-                $('#radios5').css("visibility", "hidden");
-                selectMatrixName =findMatrix();
-  
-              }
-              else if(jobOption === 'Other'){
-                $('#radios6').css("visibility", "visible");
-                $('#radios2').css("visibility", "hidden");
-                $('#radios3').css("visibility", "hidden");
-                $('#radios4').css("visibility", "hidden");
-                $('#radios5').css("visibility", "visible");
-                selectMatrixName =findMatrix();
-              }
-              //read selected matrix and replot the map
-              d3.csv(selectMatrixName,function(d){              
-                dataMatrix = buildMatrixLookup(d);
-                $("#wait").css("display", "none");
-                featureLayer.redraw();
-              });
-            }
-        });
 
-        $('#radios2').click(function() {
-          var nowCarOption =  $('input[name=options2]:checked').val();
-          if(nowCarOption!= carOption){
-            carOption = nowCarOption;
-            redrawLayer();
-          }
-        });
-        
-        $('#radios3').click(function() {
-          var nowIncomeOption =  $('input[name=options3]:checked').val();
-          if(nowIncomeOption!=incomeOption){
-            incomeOption = nowIncomeOption;
-            redrawLayer();
-          }
-        });
-        $('#radios4').click(function() {
-          var nowGradeOption =  $('input[name=options4]:checked').val();
-          if(nowGradeOption !=gradeOption){
-            gradeOption = nowGradeOption;
-            redrawLayer();
-          }
-        });
-        
-        $('#radios5').click(function() {
-          var nowPurposeOption =  $('input[name=options5]:checked').val();
-          if(purposeOption != nowPurposeOption){
-            purposeOption = nowPurposeOption;
-            redrawLayer();
-          }
-        });
-        
-        $('#radios6').click(function() {
-          var nowCarOption3 =  $('input[name=options6]:checked').val();
-          if(nowCarOption3!= carOption3){
-            carOption3 = nowCarOption3;
-            redrawLayer();
-          }
-        });
-        function redrawLayer(){
-          selectMatrixName =findMatrix();
-          d3.csv(selectMatrixName,function(d){
+        let sliderRecord = {
+            filePath:null
+        };
+        let oldSliderRecord = {
+            filePath:null
+        };
+
+        let maxDepth = checkDepth(sliderType);
+        console.log(maxDepth);
+
+        for(let i=1;i<maxDepth+1;i++){
+            $('#dynamicRadioContainers').append('<div class="selection" id="'+i+'"></div>');
+            sliderRecord[i] = null;
+            oldSliderRecord[i] = null;
+
+        }
+        setSelection(sliderRecord,1,sliderType);
+
+        function setSelection(record,num,tmpSliderType){
+            $('#'+num).append('<div id="'+num+'Radios"></div>');
+
+            if(isDict(tmpSliderType)) {
+                for (let k in tmpSliderType) {
+                    $('#'+num+'Radios').append('<input type="radio" name="'+num+'Radios" value="'+k+'" id="'+k+'">')
+                        .append('<label for="'+k+'">'+k+'</label>')
+                }
+                $('#'+num+'Radios').radiosToSlider({animation: true});
+                $('#'+num+'Radios').click(function(e){
+                    if(typeof($("input[name='"+num+"Radios']:checked").val())!=='undefined' && $("input[name='"+num+"Radios']:checked").val()!==oldSliderRecord[num]) {
+                        record[num] = $("input[name='" + num + "Radios']:checked").val();
+                        record.filePath = null;
+                        record  = emptyOtherSelection(num, maxDepth,record);
+                        oldSliderRecord = record;
+                        setSelection(record, num + 1, tmpSliderType[record[num]]);
+                    }
+                });
+            }
+            else{
+                for (let k=0;k<tmpSliderType.length;k++) {
+                    // $('#'+num).append('<option>' + tmpSliderType[k] + '</option>');
+                    $('#'+num+'Radios').append('<input type="radio" name="'+num+'Radios" value="'+tmpSliderType[k]+'" id="'+tmpSliderType[k]+'">')
+                        .append('<label for="'+tmpSliderType[k]+'">'+tmpSliderType[k]+'</label>')
+                }
+                $('#'+num+'Radios').radiosToSlider({animation: true});
+                $('#'+num+'Radios').click(function(e){
+
+                    if(typeof($("input[name='"+num+"Radios']:checked").val())!=='undefined' && $("input[name='"+num+"Radios']:checked").val()!==oldSliderRecord[num]) {
+                        record[num] =$("input[name='"+num+"Radios']:checked").val();
+                        oldSliderRecord[num]=record[num];
+                        record.filePath = generateFilePath(num,record);
+                        console.log(record.filePath);
+                        $("#wait").css("display", "block");
+                        redrawLayer(record.filePath);
+
+                    }
+
+                })
+            }
+        }
+        function emptyOtherSelection(num,maxValue,record){
+            for(let i=num+1;i<maxValue+1;i++){
+                record[i] =null;
+                $('#'+i).empty();
+            }
+            return record
+        }
+        function generateFilePath(num,record){
+            // console.log(record,num)
+            result = './data';
+            for(let i=1;i<num;i++){
+                result = result + '/'+record[i]
+            }
+            result+='/'+record[num]+'.csv';
+            return result
+
+        }
+        function redrawLayer(filePath){
+          d3.csv(filePath,function(d){
             dataMatrix = buildMatrixLookup(d);
             $("#wait").css("display", "none");
             featureLayer.redraw();
@@ -303,4 +281,22 @@ function findMatrix(){
   console.log(baseDirect);
   return baseDirect;
   
+}
+
+function checkDepth(object){
+    var level = 1;
+    var key;
+    for(key in object) {
+        if (!object.hasOwnProperty(key)) continue;
+
+        if(typeof object[key] == 'object'){
+            var depth = checkDepth(object[key]) + 1;
+            level = Math.max(depth, level);
+        }
+    }
+    return level;
+
+}
+function isDict(v) {
+    return typeof v==='object' && v!==null && !(v instanceof Array) && !(v instanceof Date);
 }
