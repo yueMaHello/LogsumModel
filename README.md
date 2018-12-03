@@ -1,5 +1,13 @@
 # Logsum Model 
-This is a Nodejs web application using Arcgis Javascript API. It shows logsum matrixs in a gravity map format. The user can change the combinations of properties on the right corner to get various results.
+This is a Nodejs web application using Arcgis Javascript API. It shows logsum matrices in a gravity map format. The user can change the combinations of properties on the right corner to get various results.
+
+As you can see in the './data' folder, there are several sub folders. Files in each sub folder also have different naming formats.
+Currently, the app uses six sliders to know which sliders it should choose. Those six sliders will show at the same time, and sliders will hide and show based on selected job type.
+
+Since the logic behind the selection may be not easy to understand, it would be better if you could follow the same data format to update the data. Otherwise, you will need to change the code to let it suit your newest dataset.
+
+The data in 'dataExample' folder is just a zone-to-zone matrix. It is not sufficient data example to run the app. You need to follow the format in './data' folder
+
 ## Set Up
 #### From Github:
 1. If you haven't downloaded Nodejs on your computer, you need to download it and add it into PATH.
@@ -37,7 +45,9 @@ All the logsum data set is provided by Cherry. If you just want to simply renew 
 #### If you want to change the legend color:
 1. Open './public/javascripts/test.js' file, search 'readerer.addBreak' to show that part of code.
 2. Change 'new Color([255, 255, 255,0.90])' to some other RGB color.
-      
+#### Rules of selection
+1. The user needs to select job type first (Work,PSE,Grade School, Others...)
+2. The app will show and hide slider based on job type selection
 #### Woops, the App can't run after changing a new dataset:
  1. You need to restart the server from terminal/cmd (Rerun 'npm start').
 
