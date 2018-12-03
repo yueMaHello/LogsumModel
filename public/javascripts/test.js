@@ -8,20 +8,8 @@ The data in 'dataExample' folder is just a zone-to-zone matrix. It is not suffic
 */
 var map;
 var dataMatrix;
-var q = d3.queue();
 var check = false;//default condition for slider
-var largestIndividualArray = [];
-var sort = [];
 var selectZone = '101'; //default
-//initialization of selections
-var jobOption = 'Work'; //PSE,Other,Otherpurpose,GS
-var incomeOption = 'Med'; //Hi,Lo
-var carOption = 'Ins';//No, Suff, Ins, NCAW
-var carOption3 = 'Ins';//no suff ins
-var purposeOption = "All";//Eat,PB,PUDO,QS,Rec,Shop,Soc
-var gradeOption = "Elem";//Elem,JHS,Pre,SHS_Lic,SHS_NoLic
-var selectMatrixName='../data/Work/Medium Income/Insuff Car.csv'; //default matrix, show when loading the web page
-//load esri libraries
 require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
   "esri/tasks/query","esri/dijit/Popup",
   "dojo/dom-class","esri/dijit/BasemapToggle","esri/dijit/Legend",
@@ -33,9 +21,7 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
 ) { //convert radios to slider
 
     //load default csv
-    q.defer(d3.csv,selectMatrixName).await(brushMap);
-    function brushMap(error,selectMatrix,title){
-
+        let renderer;
         let sliderRecord = {
             filePath:null
         };
@@ -88,6 +74,7 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
                         record.filePath = generateFilePath(num,record);
                         console.log(record.filePath);
                         $("#wait").css("display", "block");
+                        featureLayer.setRenderer(renderer);
                         redrawLayer(record.filePath);
 
                     }
@@ -116,11 +103,11 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
           d3.csv(filePath,function(d){
             dataMatrix = buildMatrixLookup(d);
             $("#wait").css("display", "none");
-            featureLayer.redraw();
+              featureLayer.setRenderer(renderer);
+              featureLayer.redraw();
           });
         }
-        dataMatrix = buildMatrixLookup(selectMatrix);
-        var popup = new Popup({  
+        var popup = new Popup({
           fillSymbol:
             new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
               new Color([255, 0, 0]), 2)
@@ -170,45 +157,41 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
             selectZone = graphic.attributes.TAZ_New;
             var highlightGraphic = new Graphic(evt.graphic.geometry,highlightSymbol);
             map.graphics.add(highlightGraphic);
-            featureLayer.redraw();
+            featureLayer.redraw()
+
         });
-        var accessibilityResult = [];
-        largestIndividualArray = findRangeForIndividualCalcultion();
-        sort = Object.values(largestIndividualArray).sort((prev,next)=>prev-next); //from smallest to largest
-        sort = sort.map(x =>x.toFixed(2));
-        var chunkZones = 89;        
-        var symbol = new SimpleFillSymbol(); 
-        var renderer = new ClassBreaksRenderer(symbol, function(feature){
-          //if 'var check' is false, then show origin to destination
-          if(check === false){
-            return dataMatrix[selectZone][feature.attributes.TAZ_New];
-          }
-          //else, destination to origin
-          else{
-            return dataMatrix[feature.attributes.TAZ_New][selectZone];
-          }
-       });
-       //legend. If you want to change legend scale or legend color, this part of code needs to be modified
-       renderer.addBreak(-Infinity, sort[chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([255, 255, 255,0.90])));
-       renderer.addBreak(sort[chunkZones], sort[2*chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([	249, 238, 237,0.90])));
-       renderer.addBreak(sort[2*chunkZones], sort[3*chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([243, 224, 219,0.90])));
-       renderer.addBreak(sort[3*chunkZones], sort[4*chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([237, 214, 202,0.90])));
-       renderer.addBreak(sort[4*chunkZones], sort[5*chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([225, 200, 170,0.90])));
-       renderer.addBreak(sort[5*chunkZones],  sort[6*chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([213, 196, 141,0.90])));
-       renderer.addBreak(sort[6*chunkZones],  sort[7*chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([207, 197, 127,0.90])));
-       renderer.addBreak(sort[7*chunkZones], sort[8*chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([201, 199, 113,0.90])));
-       renderer.addBreak(sort[8*chunkZones], sort[9*chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([185, 195, 101,0.90])));
-       renderer.addBreak(sort[9*chunkZones], sort[10*chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([168, 189, 88,0.90])));
-       renderer.addBreak(sort[10*chunkZones], sort[11*chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([149, 183, 77,0.90])));
-       renderer.addBreak(sort[11*chunkZones], sort[12*chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([129, 177, 66,0.90])));
-       renderer.addBreak(sort[12*chunkZones], sort[13*chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([109, 171, 55,0.90])));
-       renderer.addBreak(sort[13*chunkZones], sort[14*chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([87, 165, 45,0.90])));
-       renderer.addBreak(sort[14*chunkZones], sort[15*chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([	66, 159, 36,0.90])));
-       renderer.addBreak(sort[15*chunkZones], sort[16*chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([44, 153, 27,0.90])));  
-       renderer.addBreak(sort[16*chunkZones], sort[17*chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([	37, 121, 24,0.90])));
-       renderer.addBreak(sort[17*chunkZones], sort[18*chunkZones], new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([11, 106, 18,0.90])));
-       renderer.addBreak(sort[18*chunkZones], Infinity, new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([5, 80, 15,0.90])));
-       featureLayer.setRenderer(renderer);
+
+        var symbol = new SimpleFillSymbol();
+        renderer = new ClassBreaksRenderer(symbol, function(feature){
+            //if 'var check' is false, then show origin to destination
+            if(check === false){
+                return dataMatrix[selectZone][feature.attributes.TAZ_New];
+            }
+            //else, destination to origin
+            else{
+                return dataMatrix[feature.attributes.TAZ_New][selectZone];
+            }
+        });
+        //legend. If you want to change legend scale or legend color, this part of code needs to be modified
+        renderer.addBreak(-Infinity, -4.38, new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([255, 255, 255,0.90])));
+        renderer.addBreak(-4.38, -3.68, new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([	249, 238, 237,0.90])));
+        renderer.addBreak(-3.68, -3.17, new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([243, 224, 219,0.90])));
+        renderer.addBreak(-3.17, -2.91, new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([237, 214, 202,0.90])));
+        renderer.addBreak(-2.91, -2.73, new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([225, 200, 170,0.90])));
+        renderer.addBreak(-2.73, -2.59, new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([213, 196, 141,0.90])));
+        renderer.addBreak(-2.59, -2.5, new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([207, 197, 127,0.90])));
+        renderer.addBreak(-2.5, -2.4, new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([201, 199, 113,0.90])));
+        renderer.addBreak(-2.4, -2.31, new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([185, 195, 101,0.90])));
+        renderer.addBreak(-2.31, -2.21, new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([168, 189, 88,0.90])));
+        renderer.addBreak(-2.21, -2.08, new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([149, 183, 77,0.90])));
+        renderer.addBreak(-2.08, -1.91, new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([129, 177, 66,0.90])));
+        renderer.addBreak(-1.91, -1.79, new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([109, 171, 55,0.90])));
+        renderer.addBreak(-1.79, -1.69, new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([87, 165, 45,0.90])));
+        renderer.addBreak(-1.69, -1.60, new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([	66, 159, 36,0.90])));
+        renderer.addBreak(-1.60, -1.49, new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([44, 153, 27,0.90])));
+        renderer.addBreak(-1.49, -1.36, new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([	37, 121, 24,0.90])));
+        renderer.addBreak(-1.36, -1.16, new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([11, 106, 18,0.90])));
+        renderer.addBreak(-1.16, Infinity, new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),1)).setColor(new Color([5, 80, 15,0.90])));
        //legend
         $('#legendDiv').append('<div class="legendClass" id = "legendid" </div>');  
         var legend = new Legend({
@@ -221,24 +204,37 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
             map.addLayer(lrtFeatureLayer);
             map.addLayer(pseLayer);
             legend.startup();
-            featureLayer.redraw();
+            resetLayer();
+
         });
         //slider which is used to switch between 'destination to origin' and 'origin to destination'
         $("#interact").click(function(e, parameters) {
             if($("#interact").is(':checked')){
                 check = true;
                 $('#sliderNote').html("D&nbspto&nbspO");
+                featureLayer.setRenderer(renderer);
+
                 featureLayer.redraw();  
             }
             else{
               check = false;
               $('#sliderNote').html("O&nbspto&nbspD");
-              featureLayer.redraw();
+                featureLayer.setRenderer(renderer);
+
+                featureLayer.redraw();
 
             }
         });
+        function resetLayer(){
+            let symbol = new SimpleFillSymbol();
+            let tmpRenderer = new ClassBreaksRenderer(symbol,function(feature){
+                return 1;
+            });
+            tmpRenderer.addBreak(-Infinity, Infinity, new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,new Color([0,0,0,0.1]),0.3)).setColor(new Color([255, 255, 255,0.30])));
+            featureLayer.setRenderer(tmpRenderer);
+            featureLayer.redraw();
+        }
 
-    }
 });
 //read csv file into a 2d matrix
 function buildMatrixLookup(arr) {    
@@ -253,35 +249,7 @@ function buildMatrixLookup(arr) {
   return lookup;
 }
 //legend is based on this range
-//why zone 101? Since it is the center of the city
-function findRangeForIndividualCalcultion(){
-  return dataMatrix['101'];
-}
-//read radio buttons value and return selected csv url
-function findMatrix(){
-  $("#wait").css("display", "block");
-  var baseDirect = "../data/"+jobOption+'/Logsum';
-  if(jobOption === 'Work'){
-    baseDirect += incomeOption+'_'+carOption+'.csv';  
-  }
-  else if(jobOption === 'PSE'){
-    baseDirect += carOption3+'.csv';
-  }
-  else if(jobOption === 'GS'){
-    baseDirect += gradeOption+'_'+carOption3+'.csv';
-  }
-  else if(jobOption==='Other'){
-    if(purposeOption === 'All'){
-      baseDirect+=carOption3+'.csv';
-    }
-    else{
-      baseDirect = "../data/Otherpurpose/Logsum"+purposeOption+'_'+carOption3+'.csv';
-    }
-  }
-  console.log(baseDirect);
-  return baseDirect;
-  
-}
+
 
 function checkDepth(object){
     var level = 1;
