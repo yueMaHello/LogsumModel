@@ -154,7 +154,7 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
         featureLayer.on('click',function(evt){
             map.graphics.clear();
             var graphic = evt.graphic;
-            selectZone = graphic.attributes.TAZ_New;
+            selectZone = graphic.attributes.TAZ_New;//field name could be different and could be changed if you change the layer
             var highlightGraphic = new Graphic(evt.graphic.geometry,highlightSymbol);
             map.graphics.add(highlightGraphic);
             featureLayer.redraw()
@@ -257,7 +257,7 @@ function checkDepth(object){
     for(key in object) {
         if (!object.hasOwnProperty(key)) continue;
 
-        if(typeof object[key] == 'object'){
+        if(typeof(object[key])=== 'object'){
             var depth = checkDepth(object[key]) + 1;
             level = Math.max(depth, level);
         }
