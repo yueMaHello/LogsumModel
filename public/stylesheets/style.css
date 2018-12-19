@@ -153,9 +153,9 @@ input:checked + .slider2:before {
   height:150px;
   /* overflow-y: scroll; */
   z-index:50;
-  width:200px;
+  width:150px;
   border-style: groove;
-  background-color: #e6e6e6;
+  background-color: #ffffff;
 
 }
 #travelMethod,#jobType{

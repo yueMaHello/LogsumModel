@@ -8,15 +8,16 @@ The data in 'dataExample' folder is just a zone-to-zone matrix. It is not suffic
 */
 var map;
 var dataMatrix;
+var travelZoneLayerId = 'TAZ_New';
 var check = false;//default condition for slider
 var selectZone = '101'; //default
 require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
-  "esri/tasks/query","esri/dijit/Popup",
+  "esri/tasks/query",
   "dojo/dom-class","esri/dijit/BasemapToggle","esri/dijit/Legend",
   "esri/map", "esri/layers/FeatureLayer","esri/symbols/SimpleFillSymbol", 
   "esri/symbols/SimpleLineSymbol","esri/renderers/ClassBreaksRenderer",
   "esri/Color", "dojo/dom-style", "dojo/domReady!"
-], function(Graphic,Polyline,domConstruct,Query,Popup,domClass,BasemapToggle,Legend,Map, FeatureLayer,
+], function(Graphic,Polyline,domConstruct,Query,domClass,BasemapToggle,Legend,Map, FeatureLayer,
   SimpleFillSymbol,SimpleLineSymbol,ClassBreaksRenderer,Color, domStyle
 ) { //convert radios to slider
 
@@ -107,14 +108,8 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
               featureLayer.redraw();
           });
         }
-        var popup = new Popup({
-          fillSymbol:
-            new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
-              new Color([255, 0, 0]), 2)
-        }, domConstruct.create("div"));
-  
         map = new Map("map", {
-            basemap: "dark-gray-vector",
+            basemap: "gray",
             center: [-113.4909, 53.5444],
             zoom: 9,
             minZoom:6,
@@ -154,7 +149,7 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
         featureLayer.on('click',function(evt){
             map.graphics.clear();
             var graphic = evt.graphic;
-            selectZone = graphic.attributes.TAZ_New;//field name could be different and could be changed if you change the layer
+            selectZone = graphic.attributes[travelZoneLayerId];//field name could be different and could be changed if you change the layer
             var highlightGraphic = new Graphic(evt.graphic.geometry,highlightSymbol);
             map.graphics.add(highlightGraphic);
             featureLayer.redraw()
@@ -165,11 +160,11 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
         renderer = new ClassBreaksRenderer(symbol, function(feature){
             //if 'var check' is false, then show origin to destination
             if(check === false){
-                return dataMatrix[selectZone][feature.attributes.TAZ_New];
+                return dataMatrix[selectZone][feature.attributes[travelZoneLayerId]];
             }
             //else, destination to origin
             else{
-                return dataMatrix[feature.attributes.TAZ_New][selectZone];
+                return dataMatrix[feature.attributes[travelZoneLayerId]][selectZone];
             }
         });
         //legend. If you want to change legend scale or legend color, this part of code needs to be modified
@@ -213,7 +208,6 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
                 check = true;
                 $('#sliderNote').html("D&nbspto&nbspO");
                 featureLayer.setRenderer(renderer);
-
                 featureLayer.redraw();  
             }
             else{
@@ -249,8 +243,6 @@ function buildMatrixLookup(arr) {
   return lookup;
 }
 //legend is based on this range
-
-
 function checkDepth(object){
     var level = 1;
     var key;
