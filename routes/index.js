@@ -2,7 +2,7 @@ var express = require('express');
 var fs = require('fs');
 var path = require('path');
 var router = express.Router();
-var appName = 'Logsum Model';
+var appName = 'Access Contour';
 var currentFolderName = './public/data/';
 
 Array.prototype.contains = function(element){

@@ -73,7 +73,7 @@ require(["esri/graphic","esri/geometry/Polyline","dojo/dom-construct",
                         oldSliderRecord[num]=record[num];
                         record.filePath = generateFilePath(num,record);
                         console.log(record.filePath);
-                        $("#wait").css("display", "block");
+                        $("#wait").css("display", "block"); // block here means that everything else is not shown except for the gif image when it is loading.
                         featureLayer.setRenderer(renderer);
                         redrawLayer(record.filePath);
 
