@@ -25,7 +25,7 @@ The data in 'dataExample' folder is just a zone-to-zone matrix. It is not suffic
 ## Run
 1. Use terminal/cmd to go to the root of the App './logsumModel'. 
 2. Type 'npm start'
-2. Browse 'http://localhost:3034' or 'http://162.106.202.155:3034/'
+2. Browse 'http://localhost:3034'
 
 ## Use tips:
 #### If you want to update the dataset:
